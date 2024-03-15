@@ -36,7 +36,7 @@ class FilmControllerTest {
                 "Ожидалось другое описание фильма");
         assertEquals("2020-01-01", testFilm.getReleaseDate().toString(),
                 "Ожидалась другая дата релиза");
-        assertEquals(Duration.of(50, MINUTES), testFilm.getDuration(),
+        assertEquals(50, testFilm.getDuration(),
                 "Ожидалась другая продолжительность фильма");
     }
 
