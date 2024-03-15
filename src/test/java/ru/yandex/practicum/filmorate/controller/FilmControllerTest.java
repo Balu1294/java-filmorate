@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.Duration;
 import java.time.LocalDate;
 
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,7 +23,7 @@ class FilmControllerTest {
                 .name("Тестовый фильм")
                 .description("Это тестовый фильм для проверки программы")
                 .releaseDate(LocalDate.of(2020, 01, 01))
-                .duration(Duration.ofMinutes(50))
+                .duration(50)
                 .build();
         filmController = new FilmController();
     }
@@ -35,7 +36,7 @@ class FilmControllerTest {
                 "Ожидалось другое описание фильма");
         assertEquals("2020-01-01", testFilm.getReleaseDate().toString(),
                 "Ожидалась другая дата релиза");
-        assertEquals("PT50M", testFilm.getDuration().toString(),
+        assertEquals(Duration.of(50, MINUTES), testFilm.getDuration(),
                 "Ожидалась другая продолжительность фильма");
     }
 
@@ -80,7 +81,7 @@ class FilmControllerTest {
 
     @Test
     void createNewBadDurationFilm() {
-        testFilm.setDuration(testFilm.getDuration().minusMinutes(51));
+        testFilm.setDuration(-1);
         ValidationException exception = assertThrows(ValidationException.class, new Executable() {
             @Override
             public void execute() throws Throwable {

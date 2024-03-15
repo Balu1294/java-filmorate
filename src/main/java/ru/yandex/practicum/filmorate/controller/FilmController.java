@@ -31,10 +31,15 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws ValidationException {
-        log.info("Обновляются данные о фильме с id = {}", film.getId());
-        validateFilm(film);
-        films.put(film.getId(), film);
-        return film;
+        if(films.get(film.getId()) != null) {
+            log.info("Обновляются данные о фильме с id = {}", film.getId());
+            validateFilm(film);
+            films.put(film.getId(), film);
+            return film;
+        } else {
+            log.error("Фильм не найден");
+            throw new ValidationException("Фильм не найден");
+        }
     }
 
     @GetMapping
@@ -57,8 +62,8 @@ public class FilmController {
                     film.getReleaseDate().toString());
             throw new ValidationException("Дата релиза не может быть раньше изобретения кино");
         }
-        if (film.getDuration().getSeconds() < 0) {
-            log.error("Валидация не пройдена. Продолжительность фильма отрицательная = {}", film.getDuration().toString());
+        if (film.getDuration() < 0) {
+            log.error("Валидация не пройдена. Продолжительность фильма отрицательная = {}", film.getDuration());
             throw new ValidationException("Продолжительность фильма не может быть отрицательной");
         }
     }
