@@ -87,6 +87,6 @@ class FilmControllerTest {
                 filmController.validateFilm(testFilm);
             }
         });
-        assertEquals("Продолжительность фильма не может быть отрицательной", exception.getMessage());
+        assertEquals("Продолжительность фильма Тестовый фильм не может быть отрицательной", exception.getMessage());
     }
 }
