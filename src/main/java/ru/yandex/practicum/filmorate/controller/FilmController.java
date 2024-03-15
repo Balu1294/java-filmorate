@@ -31,7 +31,7 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws ValidationException {
-        if(films.get(film.getId()) != null) {
+        if (films.get(film.getId()) != null) {
             log.info("Обновляются данные о фильме с id = {}", film.getId());
             validateFilm(film);
             films.put(film.getId(), film);
