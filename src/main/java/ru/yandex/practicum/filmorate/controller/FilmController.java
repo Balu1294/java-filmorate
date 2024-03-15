@@ -63,8 +63,11 @@ public class FilmController {
             throw new ValidationException("Дата релиза не может быть раньше изобретения кино");
         }
         if (film.getDuration() < 0) {
-            log.error("Валидация не пройдена. Продолжительность фильма отрицательная = {}", film.getDuration());
-            throw new ValidationException("Продолжительность фильма не может быть отрицательной");
+            log.error("Валидация не пройдена. Продолжительность фильма {} отрицательная = {}",
+                    film.getName(), film.getDuration());
+            String messageException = String.format("Продолжительность фильма %s не может быть отрицательной",
+                    film.getName());
+            throw new ValidationException(messageException);
         }
     }
 }

@@ -48,7 +48,8 @@ class FilmControllerTest {
                 filmController.validateFilm(testFilm);
             }
         });
-        assertEquals("Название фильма не может быть пустым", exception.getMessage());
+        assertEquals("Название фильма не может быть пустым", exception.getMessage(),
+                "Введено название фильма" + testFilm.getName());
     }
 
     @Test
