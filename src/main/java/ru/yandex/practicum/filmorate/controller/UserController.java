@@ -1,12 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,38 +17,27 @@ import java.util.Map;
 public class UserController {
     private Map<Integer, User> users = new HashMap<>();
     private int idGenerator = 1;
+    InMemoryUserStorage userStorage;
+
+    @Autowired
+    public UserController(InMemoryUserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) throws ValidationException {
-        validationUsers(user);
-        user.setId(idGenerator++);
-        users.put(user.getId(), user);
-        log.info("Создается пользователь с id = {}. Пользователь создан.", idGenerator - 1);
-        return user;
+    public User createUser(@RequestBody User user) throws ValidationException {
+        return userStorage.createUser(user);
     }
 
     @PutMapping
-    public User updateUser(@RequestBody @Valid User user) throws ValidationException {
-        if (users.get(user.getId()) != null) {
-            validationUsers(user);
-            users.put(user.getId(), user);
-            log.info("Обновление данных пользователя {}", user.getName());
-            return user;
-        } else {
-            log.error("Пользователь не найден");
-            throw new ValidationException("Пользователь не найден.");
-        }
+    public User updateUser(@RequestBody User user) throws ValidationException {
+        return userStorage.updateUser(user);
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        return userStorage.getAllUsers();
     }
 
-    public void validationUsers(User user) throws ValidationException {
-        if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-            log.info("У пользователя с Email {} отсутствует имя. Его имя будет заменено логином.", user.getEmail());
-        }
-    }
+
 }
