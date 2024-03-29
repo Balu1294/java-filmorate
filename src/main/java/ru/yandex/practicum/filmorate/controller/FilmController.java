@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.List;
 
@@ -15,18 +15,18 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    private final InMemoryFilmStorage filmStorage;
+    private final FilmStorage filmStorage;
     private FilmService filmService;
 
     @Autowired
-    public FilmController(InMemoryFilmStorage filmStorage, FilmService filmService) {
+    public FilmController(FilmStorage filmStorage, FilmService filmService) {
         this.filmStorage = filmStorage;
         this.filmService = filmService;
     }
 
     @PostMapping
     public Film addFilm(@RequestBody Film film) throws ValidationException {
-        log.info("Добавляется новый фильм с id = {}", filmStorage.getIdGenerator());
+        log.info("Добавляется новый фильм");
         return filmStorage.addFilm(film);
     }
 
@@ -43,21 +43,21 @@ public class FilmController {
     }
 
     /*пользователь ставит лайк фильму */
-    @PutMapping("/films/{id}/like/{userId}")
+    @PutMapping("/{id}/like/{userId}")
     public Film userLikedFilm(@PathVariable String id, @PathVariable String userId) {
         log.info("Пользователь с id={} ставит лайк фильму с id={}", userId, id);
         return filmService.addLike(Integer.parseInt(id), Integer.parseInt(userId));
     }
 
     /*пользователь удаляет лайк */
-    @DeleteMapping("/films/{id}/like/{userId}")
+    @DeleteMapping("/{id}/like/{userId}")
     public void userRemovedLike(@PathVariable String id, @PathVariable String userId) {
         log.info("Пользователь с id= {} удаляет лайк фильму с id= {}", userId, id);
         filmService.removeLike(Integer.parseInt(id), Integer.parseInt(userId));
     }
 
     /*возвращает список топ фильмов*/
-    @GetMapping("/films/popular?count={count}")
+    @GetMapping("/popular")
     public List<Film> getTopFilms(@RequestParam(defaultValue = "10") String count) {
         log.info("Выводится список топ {} фильмов", count);
         return filmService.getTopFilms(Integer.parseInt(count));

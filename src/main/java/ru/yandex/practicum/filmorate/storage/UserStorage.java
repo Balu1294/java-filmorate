@@ -11,4 +11,12 @@ public interface UserStorage {
     User updateUser(User user) throws ValidationException;
 
     List<User> getAllUsers();
+
+    User addNewFriend(Integer userId, Integer friendId);
+
+    User getUserById(Integer id);
+
+    List<User> getFriendsByUserId(Integer id);
+
+    User deleteFriend(Integer userId, Integer friendId);
 }
