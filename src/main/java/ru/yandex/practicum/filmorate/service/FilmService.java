@@ -20,9 +20,10 @@ public class FilmService {
         this.filmStorage = filmStorage;
     }
 
-    public void addLike(int filmId, int userId) {
+    public Film addLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId);
         film.getLikes().add(userId);
+        return film;
     }
 
     public void removeLike(int filmId, int userId) {

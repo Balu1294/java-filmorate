@@ -19,11 +19,12 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
-    public void addNewFriends(Integer userId, Integer friendId) {
+    public User addNewFriends(Integer userId, Integer friendId) {
         User user = userStorage.getUsers().get(userId);
         User friendUser = userStorage.getUsers().get(friendId);
         user.getFriends().add(friendId);
         friendUser.getFriends().add(userId);
+        return user;
     }
 
     public void deleteFriend(Integer userId, Integer friendId) {
@@ -39,5 +40,10 @@ public class UserService {
         List<Integer> mutualFriends = new ArrayList<>(user.getFriends());
         mutualFriends.retainAll(friendUser.getFriends());
         return mutualFriends;
+    }
+
+    public List<Integer> getFriendsOfUser(int id) {
+        User user = userStorage.getUsers().get(id);
+        return new ArrayList<>(user.getFriends());
     }
 }

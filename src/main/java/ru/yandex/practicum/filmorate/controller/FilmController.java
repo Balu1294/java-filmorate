@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.util.List;
@@ -15,10 +16,12 @@ import java.util.List;
 public class FilmController {
 
     private final InMemoryFilmStorage filmStorage;
+    private FilmService filmService;
 
     @Autowired
-    public FilmController(InMemoryFilmStorage filmStorage) {
+    public FilmController(InMemoryFilmStorage filmStorage, FilmService filmService) {
         this.filmStorage = filmStorage;
+        this.filmService = filmService;
     }
 
     @PostMapping
@@ -36,5 +39,21 @@ public class FilmController {
         return filmStorage.getAllFilms();
     }
 
+    /*пользователь ставит лайк фильму */
+    @PutMapping("/films/{id}/like/{userId}")
+    public Film userLikedFilm(@PathVariable String id, @PathVariable String userId) {
+        return filmService.addLike(Integer.parseInt(id), Integer.parseInt(userId));
+    }
 
+    /*пользователь удаляет лайк */
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public void userRemovedLike(@PathVariable String id, @PathVariable String userId) {
+        filmService.removeLike(Integer.parseInt(id), Integer.parseInt(userId));
+    }
+
+    /*возвращает список топ фильмов*/
+    @GetMapping("/films/popular?count={count}")
+    public List<Film> getTopFilms(@RequestParam(defaultValue = "10") String count) {
+        return filmService.getTopFilms(Integer.parseInt(count));
+    }
 }
