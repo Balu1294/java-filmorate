@@ -23,7 +23,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) throws ValidationException {
-        log.info("Добавляется новый фильм с id = {}", idGenerator);
         validateFilm(film);
         film.setId(idGenerator++);
         films.put(film.getId(), film);
@@ -40,7 +39,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) throws ValidationException {
         if (films.get(film.getId()) != null) {
-            log.info("Обновляются данные о фильме с id = {}", film.getId());
             validateFilm(film);
             films.put(film.getId(), film);
             return film;
