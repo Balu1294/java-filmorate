@@ -26,40 +26,40 @@ public class FilmController {
 
     @PostMapping
     public Film addFilm(@RequestBody Film film) throws ValidationException {
-        log.info("Добавляется новый фильм");
+        log.info("Поступил запрос на добавление нового фильма");
         return filmStorage.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws ValidationException {
-        log.info("Обновляются данные о фильме с id = {}", film.getId());
+        log.info("Поступил запрос на обновление данных о фильме с id = {}", film.getId());
         return filmStorage.updateFilm(film);
     }
 
     @GetMapping
     public List<Film> getAllFilms() {
-        log.info("Выводится список всех фильмов");
+        log.info("Поступил запрос на вывод списка всех фильмов");
         return filmStorage.getAllFilms();
     }
 
     /*пользователь ставит лайк фильму */
     @PutMapping("/{id}/like/{userId}")
     public Film userLikedFilm(@PathVariable String id, @PathVariable String userId) {
-        log.info("Пользователь с id={} ставит лайк фильму с id={}", userId, id);
+        log.info("Поступил запрос на добавление лайка к фильму");
         return filmService.addLike(Integer.parseInt(id), Integer.parseInt(userId));
     }
 
     /*пользователь удаляет лайк */
     @DeleteMapping("/{id}/like/{userId}")
     public void userRemovedLike(@PathVariable String id, @PathVariable String userId) {
-        log.info("Пользователь с id= {} удаляет лайк фильму с id= {}", userId, id);
+        log.info("Поступил запрос на удаление лайка у фильма");
         filmService.removeLike(Integer.parseInt(id), Integer.parseInt(userId));
     }
 
     /*возвращает список топ фильмов*/
     @GetMapping("/popular")
     public List<Film> getTopFilms(@RequestParam(defaultValue = "10") String count) {
-        log.info("Выводится список топ {} фильмов", count);
+        log.info("Поступил запрос на вывод списка топовых фильмов");
         return filmService.getTopFilms(Integer.parseInt(count));
     }
 }

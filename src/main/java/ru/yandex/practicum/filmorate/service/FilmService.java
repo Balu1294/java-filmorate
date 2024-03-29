@@ -25,23 +25,28 @@ public class FilmService {
 
     public Film addLike(int filmId, int userId) {
         if (!userStorage.getAllUsers().contains(userStorage.getUserById(userId))) {
+            log.error("Отсутствует пользователь с id={}", userId);
             throw new NotFoundException("Отсутствует пользователь с id= " + userId);
         }
         Film film = filmStorage.getFilmById(filmId);
         film.getLikes().add(userId);
+        log.info("Добавлен лайк пользователем с id={} фильму с id={}", userId, filmId);
         return film;
     }
 
     public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId);
         if (film.getLikes().contains(userId)) {
+            log.info("Удален лайк пользователем с id={} у фильма с id={}", userId, filmId);
             film.getLikes().remove(userId);
         } else {
+            log.error("Пользователь не ставил лайк фильму" + film);
             throw new NotFoundException("Пользователь не ставил лайк фильму" + film);
         }
     }
 
-        public List<Film> getTopFilms(int count) {
+    public List<Film> getTopFilms(int count) {
+        log.info("Вываодится список из {} фильмов", count);
         return filmStorage.getAllFilms().stream()
                 .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
                 .limit(count)

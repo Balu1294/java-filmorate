@@ -24,6 +24,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         film.setLikes(new HashSet<>());
         film.setId(idGenerator++);
         films.put(film.getId(), film);
+        log.info("Добавлен фильм с id={}", idGenerator - 1);
         return film;
     }
 
@@ -31,7 +32,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film getFilmById(int id) {
         if (films.containsKey(id)) {
             return films.get(id);
-        } else throw new NotFoundException("Film not found.");
+        } else {
+            log.error("Фильм с id={} не найден", id);
+            throw new NotFoundException("Фильм не найден");
+        }
     }
 
     @Override
@@ -39,6 +43,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.get(film.getId()) != null) {
             validateFilm(film);
             films.put(film.getId(), film);
+            log.info("Обновлен фильм с id={}", film.getId());
             return film;
         } else {
             log.error("Фильм не найден");
