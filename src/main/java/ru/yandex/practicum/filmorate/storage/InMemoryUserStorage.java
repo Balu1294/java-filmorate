@@ -66,6 +66,7 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
 
     }
+
     @Override
     public List<User> getFriendsByUserId(Integer id) {
         if (!users.containsKey(id)) {
