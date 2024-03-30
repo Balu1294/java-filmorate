@@ -59,11 +59,16 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User addNewFriend(Integer userId, Integer friendId) {
         log.info("Пользователь с id= {} добавляет в друзья пользователя с id= {}", userId, friendId);
-        User user = getUserById(userId);
-        User friendUser = getUserById(friendId);
-        user.getFriends().add(friendId);
-        friendUser.getFriends().add(userId);
-        return user;
+        if (users.containsKey(userId) && users.containsKey(friendId)) {
+            User user = getUserById(userId);
+            User friendUser = getUserById(friendId);
+            user.getFriends().add(friendId);
+            friendUser.getFriends().add(userId);
+            return user;
+        } else {
+            String exMessage = String.format("Пользователи с id= {} и {} отсутствуют", userId, friendId);
+            throw new NotFoundException(exMessage);
+        }
 
     }
 
