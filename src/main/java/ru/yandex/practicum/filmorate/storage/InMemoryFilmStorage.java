@@ -56,6 +56,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return new ArrayList<>(films.values());
     }
 
+    @Override
     public void validateFilm(Film film) throws ValidationException {
         if (film.getName().isEmpty()) {
             log.error("Валидация не пройдена. Название фильма фильма пустое.");

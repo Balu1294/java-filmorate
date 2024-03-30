@@ -13,4 +13,6 @@ public interface FilmStorage {
     List<Film> getAllFilms();
 
     Film getFilmById(int id);
+
+    void validateFilm(Film film) throws ValidationException;
 }

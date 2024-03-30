@@ -15,9 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmControllerTest {
     Film testFilm;
-    FilmController filmController;
     InMemoryFilmStorage filmStorage;
-    FilmService filmService;
+
 
     @BeforeEach
     void init() {
@@ -27,13 +26,12 @@ class FilmControllerTest {
                 .releaseDate(LocalDate.of(2020, 01, 01))
                 .duration(50)
                 .build();
-        filmController = new FilmController(filmStorage,filmService);
+        filmStorage = new InMemoryFilmStorage();
     }
 
     @Test
     void createNewOkFilm() throws ValidationException {
         filmStorage.validateFilm(testFilm);
-//        filmController.validateFilm(testFilm);
         assertEquals("Тестовый фильм", testFilm.getName(), "Названия фильмов не совпадают");
         assertEquals("Это тестовый фильм для проверки программы", testFilm.getDescription(),
                 "Ожидалось другое описание фильма");
@@ -51,7 +49,6 @@ class FilmControllerTest {
             @Override
             public void execute() throws Throwable {
                 filmStorage.validateFilm(testFilm);
-//                filmController.validateFilm(testFilm);
             }
         });
         assertEquals("Название фильма не может быть пустым", exception.getMessage(),
@@ -67,7 +64,6 @@ class FilmControllerTest {
             @Override
             public void execute() throws Throwable {
                 filmStorage.validateFilm(testFilm);
-//                filmController.validateFilm(testFilm);
             }
         });
         assertEquals("Описание не может содержать более 200 символов", exception.getMessage());
@@ -80,7 +76,6 @@ class FilmControllerTest {
             @Override
             public void execute() throws Throwable {
                 filmStorage.validateFilm(testFilm);
-//                filmController.validateFilm(testFilm);
             }
         });
         assertEquals("Дата релиза не может быть раньше изобретения кино", exception.getMessage());
@@ -93,7 +88,6 @@ class FilmControllerTest {
             @Override
             public void execute() throws Throwable {
                 filmStorage.validateFilm(testFilm);
-//                filmController.validateFilm(testFilm);
             }
         });
         assertEquals("Продолжительность фильма Тестовый фильм не может быть отрицательной", exception.getMessage());
