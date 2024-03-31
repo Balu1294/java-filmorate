@@ -28,11 +28,6 @@ class UserControllerTest {
     void init() {
         testuser = new User("yandex@ya.ru", "LoginTest", "Тестовый пользователь",
                 (LocalDate.of(1994, 12, 06)));
-//                .name("Тестовый пользователь")
-//                .login("LoginTest")
-//                .email("yandex@ya.ru")
-//                .birthday(LocalDate.of(1994, 12, 06))
-//                .build();
         userStorage = new InMemoryUserStorage();
         userService = new UserServiceImp(userStorage);
         userController = new UserController(userService);
