@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.service.FilmServiceImp;
 
 import java.util.List;
 
@@ -15,51 +14,49 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    private final FilmStorage filmStorage;
-    private FilmService filmService;
+    private final FilmServiceImp filmService;
 
     @Autowired
-    public FilmController(FilmStorage filmStorage, FilmService filmService) {
-        this.filmStorage = filmStorage;
+    public FilmController(FilmServiceImp filmService) {
         this.filmService = filmService;
     }
 
     @PostMapping
     public Film addFilm(@RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на добавление нового фильма");
-        return filmStorage.addFilm(film);
+        return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на обновление данных о фильме с id = {}", film.getId());
-        return filmStorage.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
     @GetMapping
     public List<Film> getAllFilms() {
         log.info("Поступил запрос на вывод списка всех фильмов");
-        return filmStorage.getAllFilms();
+        return filmService.getAllFilms();
     }
 
     /*пользователь ставит лайк фильму */
     @PutMapping("/{id}/like/{userId}")
-    public Film userLikedFilm(@PathVariable String id, @PathVariable String userId) {
+    public Film userLikedFilm(@PathVariable int id, @PathVariable int userId) throws ValidationException {
         log.info("Поступил запрос на добавление лайка к фильму");
-        return filmService.addLike(Integer.parseInt(id), Integer.parseInt(userId));
+        return filmService.addLike(id, userId);
     }
 
     /*пользователь удаляет лайк */
     @DeleteMapping("/{id}/like/{userId}")
-    public void userRemovedLike(@PathVariable String id, @PathVariable String userId) {
+    public void userRemovedLike(@PathVariable int id, @PathVariable int userId) throws ValidationException {
         log.info("Поступил запрос на удаление лайка у фильма");
-        filmService.removeLike(Integer.parseInt(id), Integer.parseInt(userId));
+        filmService.removeLike(id, userId);
     }
 
     /*возвращает список топ фильмов*/
     @GetMapping("/popular")
-    public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) String count) {
+    public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
         log.info("Поступил запрос на вывод списка топовых фильмов");
-        return filmService.getTopFilms(Integer.parseInt(count));
+        return filmService.getTopFilms(count);
     }
 }

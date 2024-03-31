@@ -19,12 +19,8 @@ class FilmControllerTest {
 
     @BeforeEach
     void init() {
-        testFilm = Film.builder()
-                .name("Тестовый фильм")
-                .description("Это тестовый фильм для проверки программы")
-                .releaseDate(LocalDate.of(2020, 01, 01))
-                .duration(50)
-                .build();
+        testFilm = new Film("Тестовый фильм", "Это тестовый фильм для проверки программы",
+                LocalDate.of(2020, 01, 01), 50);
         filmStorage = new InMemoryFilmStorage();
     }
 

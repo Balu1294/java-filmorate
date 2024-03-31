@@ -14,5 +14,7 @@ public interface FilmStorage {
 
     Film getFilmById(int id);
 
+    void removeFilm(Film film);
+
     void validateFilm(Film film) throws ValidationException;
 }
