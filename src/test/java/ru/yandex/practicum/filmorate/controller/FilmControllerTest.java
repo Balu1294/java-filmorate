@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 
@@ -13,22 +14,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmControllerTest {
     Film testFilm;
-    FilmController filmController;
+    InMemoryFilmStorage filmStorage;
+
 
     @BeforeEach
     void init() {
-        testFilm = Film.builder()
-                .name("Тестовый фильм")
-                .description("Это тестовый фильм для проверки программы")
-                .releaseDate(LocalDate.of(2020, 01, 01))
-                .duration(50)
-                .build();
-        filmController = new FilmController();
+        testFilm = new Film("Тестовый фильм", "Это тестовый фильм для проверки программы",
+                LocalDate.of(2020, 01, 01), 50);
+        filmStorage = new InMemoryFilmStorage();
     }
 
     @Test
     void createNewOkFilm() throws ValidationException {
-        filmController.validateFilm(testFilm);
+        filmStorage.validateFilm(testFilm);
         assertEquals("Тестовый фильм", testFilm.getName(), "Названия фильмов не совпадают");
         assertEquals("Это тестовый фильм для проверки программы", testFilm.getDescription(),
                 "Ожидалось другое описание фильма");
@@ -45,7 +43,7 @@ class FilmControllerTest {
         ValidationException exception = assertThrows(ValidationException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
-                filmController.validateFilm(testFilm);
+                filmStorage.validateFilm(testFilm);
             }
         });
         assertEquals("Название фильма не может быть пустым", exception.getMessage(),
@@ -60,7 +58,7 @@ class FilmControllerTest {
         ValidationException exception = assertThrows(ValidationException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
-                filmController.validateFilm(testFilm);
+                filmStorage.validateFilm(testFilm);
             }
         });
         assertEquals("Описание не может содержать более 200 символов", exception.getMessage());
@@ -72,7 +70,7 @@ class FilmControllerTest {
         ValidationException exception = assertThrows(ValidationException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
-                filmController.validateFilm(testFilm);
+                filmStorage.validateFilm(testFilm);
             }
         });
         assertEquals("Дата релиза не может быть раньше изобретения кино", exception.getMessage());
@@ -84,7 +82,7 @@ class FilmControllerTest {
         ValidationException exception = assertThrows(ValidationException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
-                filmController.validateFilm(testFilm);
+                filmStorage.validateFilm(testFilm);
             }
         });
         assertEquals("Продолжительность фильма Тестовый фильм не может быть отрицательной", exception.getMessage());
