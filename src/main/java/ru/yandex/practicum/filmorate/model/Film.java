@@ -15,6 +15,8 @@ public class Film {
     private LocalDate releaseDate;
     private int duration;
     private Set<Integer> likes;
+    private MPA mpa;
+    private Set<Genre> genres;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
         this.name = name;
