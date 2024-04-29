@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserServiceImp;
+import ru.yandex.practicum.filmorate.service.UserService;
 //import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -21,7 +21,7 @@ class UserControllerTest {
     User testuser;
     UserController userController;
     UserStorage userStorage;
-    UserServiceImp userService;
+    UserService userService;
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @BeforeEach

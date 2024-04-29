@@ -18,17 +18,11 @@ public class GenreService {
     private final GenreStorage genreStorage;
 
     public Genre getGenreById(Integer id) {
-        String exMesssage = String.format("Жанр с id = %d не найден", id);
-
         return genreStorage.getById(id)
-                .orElseThrow(() -> new NotFoundException(exMesssage));
+                .orElseThrow(() -> new NotFoundException(String.format("Жанр с id = %d не найден", id)));
     }
 
     public List<Genre> getAllGenres() {
         return genreStorage.getAllGenres();
     }
-
-//    public Set<Genre> getGenresOfFilm(Integer id) {
-//        return genreStorage.getGenresOfFilm(id);
-//}
 }

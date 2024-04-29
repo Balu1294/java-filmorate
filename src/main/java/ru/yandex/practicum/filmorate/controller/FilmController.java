@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmServiceImp;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.List;
 public class FilmController {
     private static final String PATH_LIKE = "/{id}/like/{userId}";
 
-    private final FilmServiceImp filmService;
+    private final FilmService filmService;
 
     @Autowired
-    public FilmController(FilmServiceImp filmService) {
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
 

@@ -16,19 +16,12 @@ import java.util.Optional;
 public class MpaService {
     private final MpaStorage mpaStorage;
 
-    public Optional<Mpa> getMpaForId(int id) {
-        String exMesssage = String.format("MPA с id = %d не найдено", id);
+    public Optional<Mpa> getMpaForId(Integer id) {
         return Optional.ofNullable(mpaStorage.getMpaForId(id)
-                .orElseThrow(() -> new NotFoundException(exMesssage)));
+                .orElseThrow(() -> new NotFoundException(String.format("MPA с id = %d не найдено", id))));
     }
 
     public List<Mpa> getAllMpa() {
         return mpaStorage.getAllMpa();
-    }
-
-    public Optional<Mpa> getMpaForFilmId(int filmId) {
-        String exMesssage = String.format("MPF c id = %d не найдено", filmId);
-        return Optional.ofNullable(mpaStorage.getMpaForFilmId(filmId)
-                .orElseThrow(() -> new NotFoundException(exMesssage)));
     }
 }

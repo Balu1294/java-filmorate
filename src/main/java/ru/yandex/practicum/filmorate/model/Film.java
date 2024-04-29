@@ -26,7 +26,6 @@ public class Film {
     @NotNull
     private LocalDate releaseDate;
     @Positive
-
     private int duration;
     @EqualsAndHashCode.Exclude
     @JsonIgnore
@@ -36,25 +35,4 @@ public class Film {
     private Mpa mpa;
     @Builder.Default
     private Set<Genre> genres = new HashSet<>();
-
-//    public Film(String name, String description, LocalDate releaseDate, int duration, Mpa mpa) {
-//        this.name = name;
-//        this.description = description;
-//        this.releaseDate = releaseDate;
-//        this.duration = duration;
-//        this.mpa = mpa;
-//        //this.likes = new HashSet<>();
-//    }
-//
-//    public Set<Integer> getLikes() {
-//        return new HashSet<>(likes);
-//    }
-//
-//    public void addLike(int id) {
-//        likes.add(id);
-//    }
-//
-//    public void removeLike(int id) {
-//        likes.remove(id);
-//    }
 }

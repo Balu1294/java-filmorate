@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +19,10 @@ import java.util.Optional;
 @Component
 public class MpaDbStorage implements MpaStorage {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<Mpa> getMpaForId(int id) {
+    public Optional<Mpa> getMpaForId(Integer id) {
         String sqlQeury = "SELECT * FROM Mpa WHERE id= ?";
         try {
             log.info("Из базы данных получен МРА с id = {}", id);
@@ -37,18 +37,6 @@ public class MpaDbStorage implements MpaStorage {
     public List<Mpa> getAllMpa() {
         String sqlQuery = "SELECT * FROM Mpa";
         return jdbcTemplate.query(sqlQuery, mapRow());
-    }
-
-    @Override
-    public Optional<Mpa> getMpaForFilmId(int filmId) {
-        String sqlQuery = "SELECT m.id, m.name " + "FROM films AS f" + "JOIN Mpa AS m ON f.mpa_id=m.id" + " WHERE f.id=?";
-        try {
-            log.info("Из базы данных получен МРА принадлежащий фильму с id = {}", filmId);
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQuery, mapRow(), filmId));
-        } catch (EmptyResultDataAccessException ex) {
-            log.error("У фильма с id = {} отсутствует МРА", filmId);
-            return Optional.empty();
-        }
     }
 
     public RowMapper<Mpa> mapRow() {

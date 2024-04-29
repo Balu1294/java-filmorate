@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +22,14 @@ public class UserFriendsDbStorage implements UserFriendsStorage {
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
-        String sqlQuery = "insert into user_friends (user_id, friend_id) values (?, ?)";
+        String sqlQuery = "INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?)";
         jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
     @Override
     public void removeFriend(Integer userId, Integer friendId) {
         log.info("Пользовательн с id = {} удаляет из друзей пользователя с id = {}", userId, friendId);
-        String sqlQuery = "DELETE FROM user_friends where user_id=? and friend_id=?;";
+        String sqlQuery = "DELETE FROM user_friends WHERE user_id=? AND friend_id=?;";
         jdbcTemplate.update(sqlQuery, userId, friendId);
         log.info("Пользователь удален из друзей");
     }
@@ -49,9 +49,7 @@ public class UserFriendsDbStorage implements UserFriendsStorage {
     @Override
     public List<User> getFriendsForUser(Integer id) {
         log.info("Выводится список друзей пользователя с id = {}", id);
-        String sqlQuery = "SELECT u.* FROM user_friends AS uf\n" +
-                "                JOIN users AS u ON uf.user_id=u.id\n" +
-                "                WHERE u.id=?";
+        String sqlQuery = "SELECT u.* FROM users u RIGHT JOIN user_friends uf ON u.id = uf.friend_id WHERE uf.user_id = ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), id);
     }
 

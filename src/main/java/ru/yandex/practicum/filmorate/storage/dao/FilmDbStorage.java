@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -9,7 +9,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -26,8 +25,8 @@ import java.util.*;
 @AllArgsConstructor
 public class FilmDbStorage implements FilmStorage {
 
-    JdbcTemplate jdbcTemplate;
-    GenreDbStorage genreDbStorage;
+    private final JdbcTemplate jdbcTemplate;
+    private final GenreDbStorage genreDbStorage;
 
     @Override
     public Film addFilm(Film film) {
@@ -88,10 +87,10 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilms(Integer count) {
-        String sqlQuery = "SELECT f.* FROM films as f "
-                + "join mpa as m on  f.mpa_id=m.id "
-                + "left join  LIKES as l on f.id=l.FILM_ID "
-                + "group by f.id order by COUNT(l.USER_ID) desc limit ?";
+        String sqlQuery = "SELECT f.* FROM films AS f "
+                + "JOIN mpa AS m ON  f.mpa_id=m.id "
+                + "LEFT JOIN  likes AS l ON f.id=l.film_id "
+                + "GROUP BY f.id ORDER BY COUNT(l.user_id) DESC LIMIT ?";
         return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
             @Override
             public Film mapRow(ResultSet rs, int rowNum) throws SQLException {

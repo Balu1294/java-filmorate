@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dao;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,6 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.function.UnaryOperator.identity;
 
 @AllArgsConstructor
 @Slf4j
@@ -29,7 +26,7 @@ public class GenreDbStorage implements GenreStorage {
 
         try {
             log.info("Из базы данных получен жанр с id = {}", id);
-            return Optional.ofNullable(jdbcTemplate.queryForObject("select * from genres where id=?",
+            return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM genres WHERE id=?",
                     mapRow(), id));
         } catch (EmptyResultDataAccessException ex) {
             log.error("Жанр с id = {} в базе данных отсутствует", id);
@@ -39,7 +36,7 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public List<Genre> getAllGenres() {
-        return jdbcTemplate.query("select * from genres ",
+        return jdbcTemplate.query("SELECT * FROM genres ",
                 mapRow());
     }
 
@@ -52,12 +49,6 @@ public class GenreDbStorage implements GenreStorage {
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Genre(
                 rs.getInt("id"),
                 rs.getString("name")), id);
-    }
-
-    @Override
-    public void updateFilmsGenre(Integer filmId, Integer genreId) {
-        String sqlQuery = "INSERT INTO films_genre(film_id, genre_id) VALUES (?,?)";
-        jdbcTemplate.update(sqlQuery, filmId, genreId);
     }
 
     @Override
@@ -81,17 +72,6 @@ public class GenreDbStorage implements GenreStorage {
     public void removeGenresForFilm(Integer filmId) {
         String sqlQuery = "DELETE FROM films_genre WHERE film_id = ?";
         jdbcTemplate.update(sqlQuery, filmId);
-    }
-
-    @Override
-    public void loadFilms(List<Film> films) {
-        Map<Integer, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, identity()));
-        String inSql = String.join(",", Collections.nCopies(films.size(), "?"));
-        String sqlQuery = "select * from genres g, films_genre fg where fg.genre_id = g.id AND fg.film_id in (" + inSql + ")";
-        jdbcTemplate.query(sqlQuery, (rs) -> {
-            Film film = filmById.get(rs.getInt("film_id"));
-            film.getGenres().add(mapRow().mapRow(rs, films.size()));
-        }, films.stream().map(Film::getId).toArray());
     }
 
     public RowMapper<Genre> mapRow() {

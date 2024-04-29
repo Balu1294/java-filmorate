@@ -8,12 +8,8 @@ import java.util.Optional;
 public interface MpaStorage {
 
     // Метод получения рейтинга(МРА) по id
-    Optional<Mpa> getMpaForId(int id);
+    Optional<Mpa> getMpaForId(Integer id);
 
     // Метод получения списка доступных рейтингов (МРА)
     List<Mpa> getAllMpa();
-
-    // метод для получения МРА по id фильма
-
-    Optional<Mpa> getMpaForFilmId(int id);
 }

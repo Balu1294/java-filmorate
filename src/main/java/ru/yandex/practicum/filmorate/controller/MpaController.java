@@ -26,9 +26,4 @@ public class MpaController {
     public List<Mpa> getAllMpa() {
         return mpaService.getAllMpa();
     }
-/*
-    @GetMapping("/{id}")
-    public Optional<Mpa> getMpaForFilmId(@PathVariable("id") int filmId) {
-        return mpaService.getMpaForFilmId(filmId);
-    }*/
 }
