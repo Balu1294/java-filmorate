@@ -25,7 +25,7 @@ public class MpaDbStorage implements MpaStorage {
     public Optional<Mpa> getMpaForId(Integer id) {
         String sqlQeury = "SELECT * FROM Mpa WHERE id= ?";
         try {
-            log.info("Из базы данных получен МРА с id = {}", id);
+            log.info("Из базы данных получен Мpa с id = {}", id);
             return Optional.ofNullable(jdbcTemplate.queryForObject(sqlQeury, mapRow(), id));
         } catch (EmptyResultDataAccessException ex) {
             log.error("МРА с id = {} в базе данных отсутствует", id);
