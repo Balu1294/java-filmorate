@@ -1,22 +1,23 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserServiceImp;
+import ru.yandex.practicum.filmorate.service.UsersFriendsService;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
-@RequestMapping(value = "/users", produces = "application/json")
+@RequestMapping(value = "/users")
 public class UserController {
 
-    //    private final UserStorage userStorage;
     private final UserServiceImp userService;
 
     @PostMapping
@@ -37,16 +38,16 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    /*Добавление в друзья */
+   /*Добавление в друзья */
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable int id, @PathVariable int friendId) throws ValidationException {
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Поступил запрос на добавление в друзья.");
         userService.addNewFriend(id, friendId);
     }
 
     /*Удаление из друзей */
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void removeFriend(@PathVariable int id, @PathVariable int friendId) throws ValidationException {
+    public void removeFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Поступление запроса на удаление из друзей");
         userService.deleteFriend(id, friendId);
     }

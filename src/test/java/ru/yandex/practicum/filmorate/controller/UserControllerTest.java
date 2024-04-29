@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserServiceImp;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+//import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.ConstraintViolation;
@@ -28,8 +28,8 @@ class UserControllerTest {
     void init() {
         testuser = new User("yandex@ya.ru", "LoginTest", "Тестовый пользователь",
                 (LocalDate.of(1994, 12, 06)));
-        userStorage = new InMemoryUserStorage();
-        userService = new UserServiceImp(userStorage);
+//        userStorage = new InMemoryUserStorage();
+       // userService = new UserServiceImp(userStorage);
         userController = new UserController(userService);
     }
 

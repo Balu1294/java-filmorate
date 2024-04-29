@@ -14,7 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class MpaService {
-    MpaStorage mpaStorage;
+    private final MpaStorage mpaStorage;
 
     public Optional<Mpa> getMpaForId(int id) {
         String exMesssage = String.format("MPA с id = %d не найдено", id);

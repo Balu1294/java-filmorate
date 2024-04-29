@@ -12,7 +12,9 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    void removeUser(User user);
+//    void removeUser(User user);
+
+    User getUserById(Integer id);
 
     void addNewFriend(int userId, int friendId) throws ValidationException;
 
