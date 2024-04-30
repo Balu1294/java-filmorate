@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -20,11 +22,12 @@ import java.util.Set;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FilmService {
-    private final FilmStorage filmStorage;
-    private final UserService userService;
-    private final GenreStorage genreStorage;
-    private final LikesStorage likesStorage;
+    FilmStorage filmStorage;
+    UserService userService;
+    GenreStorage genreStorage;
+    LikesStorage likesStorage;
 
     public Film addFilm(Film film) throws ValidationException {
         FilmValidator.filmValidate(film);
