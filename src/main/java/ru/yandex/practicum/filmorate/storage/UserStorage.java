@@ -4,15 +4,19 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserStorage {
+
+    // Метод создания нового пользователя
     User createUser(User user) throws ValidationException;
 
+    // Метод обновления данных о пользователе
     User updateUser(User user) throws ValidationException;
 
+    // Метод для вывода списка всех пользователей
     List<User> getAllUsers();
 
-    User getUserById(Integer id);
-
-    void removeUser(User user);
+    // Метод получения пользователя по id
+    Optional<User> getUserById(Integer id);
 }

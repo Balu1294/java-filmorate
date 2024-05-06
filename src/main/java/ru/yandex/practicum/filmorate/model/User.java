@@ -1,46 +1,31 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    private int id;
+    int id;
     @Email
-    @NotNull
-    private String email;
+    @NotBlank
+    String email;
     @NotNull
     @NotBlank
-    private String login;
-    private String name;
+    String login;
+    String name;
     @Past
-    private LocalDate birthday;
-    private Set<Integer> friends;
-
-    public User(String email, String login, String name, LocalDate birthday) {
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-        this.friends = new HashSet<>();
-    }
-
-    public Set<Integer> getFriends() {
-        return new HashSet<>(friends);
-    }
-
-    public void addFriend(int id) {
-        friends.add(id);
-    }
-
-    public void removeFriend(int id) {
-        friends.remove(id);
-    }
+    @NotNull
+    LocalDate birthday;
 }

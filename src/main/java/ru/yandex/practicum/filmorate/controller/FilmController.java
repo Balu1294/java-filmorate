@@ -2,34 +2,37 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmServiceImp;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/films")
+@Validated
 @Slf4j
 public class FilmController {
     private static final String PATH_LIKE = "/{id}/like/{userId}";
 
-    private final FilmServiceImp filmService;
+    private final FilmService filmService;
 
     @Autowired
-    public FilmController(FilmServiceImp filmService) {
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
 
     @PostMapping
-    public Film addFilm(@RequestBody Film film) throws ValidationException {
+    public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на добавление нового фильма");
         return filmService.addFilm(film);
     }
 
     @PutMapping
-    public Film updateFilm(@RequestBody Film film) throws ValidationException {
+    public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на обновление данных о фильме с id = {}", film.getId());
         return filmService.updateFilm(film);
     }
@@ -40,16 +43,21 @@ public class FilmController {
         return filmService.getAllFilms();
     }
 
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable Integer id) {
+        return filmService.getFilmById(id);
+    }
+
     /*пользователь ставит лайк фильму */
     @PutMapping(PATH_LIKE)
-    public Film userLikedFilm(@PathVariable int id, @PathVariable int userId) throws ValidationException {
+    public void userLikedFilm(@PathVariable Integer id, @PathVariable Integer userId) {
         log.info("Поступил запрос на добавление лайка к фильму");
-        return filmService.addLike(id, userId);
+        filmService.addLike(id, userId);
     }
 
     /*пользователь удаляет лайк */
     @DeleteMapping(PATH_LIKE)
-    public void userRemovedLike(@PathVariable int id, @PathVariable int userId) throws ValidationException {
+    public void userRemovedLike(@PathVariable Integer id, @PathVariable Integer userId) throws ValidationException {
         log.info("Поступил запрос на удаление лайка у фильма");
         filmService.removeLike(id, userId);
     }

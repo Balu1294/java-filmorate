@@ -1,40 +1,40 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class Film {
-    private int id;
-    private String name;
-    private String description;
-    private LocalDate releaseDate;
-    private int duration;
-    private Set<Integer> likes;
-    private MPA mpa;
-    private Set<Genre> genres;
-
-    public Film(String name, String description, LocalDate releaseDate, int duration) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.likes = new HashSet<>();
-    }
-
-    public Set<Integer> getLikes() {
-        return new HashSet<>(likes);
-    }
-
-    public void addLike(int id) {
-        likes.add(id);
-    }
-
-    public void removeLike(int id) {
-        likes.remove(id);
-    }
+    int id;
+    @NotBlank
+    String name;
+    @NotBlank
+    @Size(max = 200)
+    String description;
+    @NotNull
+    LocalDate releaseDate;
+    @Positive
+    int duration;
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @Builder.Default
+    int likes = 0;
+    @NotNull
+    Mpa mpa;
+    @Builder.Default
+    Set<Genre> genres = new HashSet<>();
 }
