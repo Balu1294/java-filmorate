@@ -21,10 +21,10 @@ public class User {
     @Email
     @NotBlank
     String email;
+    String name;
     @NotNull
     @NotBlank
     String login;
-    String name;
     @Past
     @NotNull
     LocalDate birthday;

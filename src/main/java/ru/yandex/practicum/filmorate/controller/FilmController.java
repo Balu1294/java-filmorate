@@ -68,4 +68,11 @@ public class FilmController {
         log.info("Поступил запрос на вывод списка топовых фильмов");
         return filmService.getTopFilms(count);
     }
+
+    /* Метод удаления фильма по id */
+    @DeleteMapping("/{filmId}")
+    public void removeFilm(@PathVariable("filmId") Integer id) {
+        log.info("Поступил запрос на удаление фильма");
+        filmService.removeFilm(id);
+    }
 }

@@ -36,7 +36,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-   /*Добавление в друзья */
+    /*Добавление в друзья */
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Поступил запрос на добавление в друзья.");
@@ -66,4 +66,17 @@ public class UserController {
         return userService.getUserFriends(id);
     }
 
+    /* Получение пользователя по id*/
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        log.info("Поступил запрос на получение пользователя по id");
+        return userService.getUserById(id);
+    }
+
+    /* Удаление пользователя по id */
+    @DeleteMapping("/{userId}")
+    public void removeUser(@PathVariable("userId") Integer id) {
+        log.info("Поступил запрос на удаление пользователя");
+        userService.removeUser(id);
+    }
 }

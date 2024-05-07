@@ -28,8 +28,8 @@ name varchar(255) not null
 );
 
 create table if not exists films_genre (
-film_id integer not null references films(id),
-genre_id integer not null references genres(id),
+film_id integer not null references films(id) ON DELETE CASCADE ON UPDATE CASCADE,
+genre_id integer not null references genres(id) ON DELETE RESTRICT ON UPDATE CASCADE,
 PRIMARY KEY (film_id, genre_id)
 );
 
@@ -43,15 +43,15 @@ birthday date not null
 );
 
 create table if not exists user_friends(
-    user_id       bigint  NOT NULL REFERENCES users (id),
-    friend_id     bigint  NOT NULL REFERENCES users (id),
+    user_id       bigint  NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    friend_id     bigint  NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
     friend_status boolean NOT NULL DEFAULT FALSE,
     PRIMARY KEY (user_id, friend_id)
 );
 
 
 create table if not exists likes (
-user_id integer not null references users(id),
-film_id integer not null references films(id),
+user_id integer not null references users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+film_id integer not null references films(id) ON DELETE CASCADE ON UPDATE CASCADE,
 PRIMARY KEY (user_id, film_id)
 );
