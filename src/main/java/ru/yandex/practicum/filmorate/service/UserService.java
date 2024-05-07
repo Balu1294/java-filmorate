@@ -61,15 +61,23 @@ public class UserService {
     }
 
     public List<User> getUserFriends(Integer userId) {
-        String exMessage = String.format("Пользователь с id= {} не найден", userId);
+        String exMessage = String.format("Пользователь с id= %d не найден", userId);
         userStorage.getUserById(userId).orElseThrow(() -> new NotFoundException(exMessage));
         return friendsService.getFriendsForUser(userId);
     }
 
     public void userVerification(Integer userId, Integer friendId) {
-        String exUserMessage = String.format("Пользователь с id= {} не найден", userId);
-        String exFriendMessage = String.format("Пользователь с id= {} не найден", friendId);
+        String exUserMessage = String.format("Пользователь с id= %d не найден", userId);
+        String exFriendMessage = String.format("Пользователь с id= %d не найден", friendId);
         userStorage.getUserById(userId).orElseThrow(() -> new NotFoundException(exUserMessage));
         userStorage.getUserById(friendId).orElseThrow(() -> new NotFoundException(exFriendMessage));
+    }
+
+    /* Удаление пользователя по id*/
+    public void removeUser(Integer id) {
+        userStorage.getUserById(id).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователь с id = %d не найден", id)));
+        userStorage.removeUser(id);
+        log.info("Удален пользователь с id = {}", id);
     }
 }

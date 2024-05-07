@@ -14,10 +14,8 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.validators.FilmValidator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -35,7 +33,7 @@ public class FilmService {
         if (!film.getGenres().isEmpty() || film.getGenres() != null) {
             Set<Genre> genres = new HashSet<>(film.getGenres());
             genreStorage.addGenreToFilm(film, genres);
-            film.setGenres(genres);
+            film.setGenres(sortGenres(genres));
         }
         return film;
     }
@@ -49,7 +47,7 @@ public class FilmService {
             Set<Genre> genres = new HashSet<>(film.getGenres());
             genreStorage.removeGenresForFilm(film.getId());
             genreStorage.addGenreToFilm(film, genres);
-            film.setGenres(genres);
+            film.setGenres(sortGenres(genres));
         } else {
             genreStorage.removeGenresForFilm(film.getId());
         }
@@ -84,4 +82,19 @@ public class FilmService {
         List<Film> topFilms = new ArrayList<>(filmStorage.getPopularFilms(count));
         return topFilms;
     }
+
+    private List<Genre> sortGenres(Set<Genre> genres) {
+        return new ArrayList<>(genres).stream()
+                .sorted((Comparator.comparingLong(Genre::getId)))
+                .collect(Collectors.toList());
+    }
+
+    /* Метод удаления фильма по id */
+    public void removeFilm(Integer id) {
+        filmStorage.getFilmById(id).orElseThrow(() ->
+                new NotFoundException(String.format("Фильм с id = %d не найден", id)));
+        filmStorage.removeFilm(id);
+        log.info("Удален фильм с id = %d", id);
+    }
+
 }
