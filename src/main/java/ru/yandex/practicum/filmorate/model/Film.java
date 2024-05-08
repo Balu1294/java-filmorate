@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -36,5 +36,5 @@ public class Film {
     @NotNull
     Mpa mpa;
     @Builder.Default
-    Set<Genre> genres = new HashSet<>();
+    List<Genre> genres = new ArrayList<>();
 }
