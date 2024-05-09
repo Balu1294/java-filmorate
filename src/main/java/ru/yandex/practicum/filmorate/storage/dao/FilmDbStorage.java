@@ -49,8 +49,10 @@ public class FilmDbStorage implements FilmStorage {
             stmt.setInt(5, film.getMpa().getId());
             return stmt;
         }, keyHolder);
-        insertDirector(film);
+
         film.setId(Objects.requireNonNull(keyHolder.getKey().intValue()));
+        insertDirector(film);
+        //film.setDirectors();
         return film;
     }
 
@@ -168,7 +170,7 @@ public class FilmDbStorage implements FilmStorage {
         }
         if (filmsByQuery != null) {
             while (filmsByQuery.next()) {
-                int filmId = filmsByQuery.getInt("film_id");
+                int filmId = filmsByQuery.getInt("id");
                 result.add(getFilmById(filmId).get());
             }
         }
@@ -197,7 +199,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getDirectorFilmsSortedBy(int directorId, String sortBy) {
+    public List<Film> getDirectorSorted(int directorId, String sortBy) {
         List<Integer> filmsIds;
         filmsIds = jdbcTemplate.query(
                 "SELECT film_id FROM films_directors WHERE director_id = ?;",

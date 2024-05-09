@@ -36,8 +36,8 @@ public class DirectorService {
     }
 
 
-    public void deleteDirector(int directorId) {
-        storage.deleteDirector(directorId);
+    public void removeDirector(int directorId) {
+        storage.removeDirector(directorId);
         log.info("Режиссер {} удален.", directorId);
     }
 
