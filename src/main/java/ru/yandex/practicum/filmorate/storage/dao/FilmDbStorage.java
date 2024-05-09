@@ -141,7 +141,9 @@ public class FilmDbStorage implements FilmStorage {
         if (!userFilms.next()) {
             return new ArrayList<>();
         }
-        String sqlQuery = "select f.*, m.name as mpa_name from films as f  join mpa as m on  f.mpa_id=m.id where f.id = ?";
+        String sqlQuery = "select f.*, m.name as mpa_name from films as f  join mpa as m on  f.mpa_id=m.id " +
+                "LEFT JOIN  likes AS l ON f.id=l.film_id " +
+                "where f.id = ? order by count(l.user_id) desc";
         return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
             @Override
             public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
