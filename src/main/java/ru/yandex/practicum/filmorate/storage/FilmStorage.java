@@ -31,5 +31,5 @@ public interface FilmStorage {
 
     List<Director> selectDirectors(int filmId);
 
-    List<Film> getDirectorFilmsSortedBy(int directorId, String sortBy);
+    List<Film> getDirectorSorted(int directorId, String sortBy);
 }

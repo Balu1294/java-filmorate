@@ -98,19 +98,19 @@ public class FilmService {
     }
 
     public List<Film> getFilmsBySearch(String query, String by) {
-        log.info("Выполним поиск фильма");
+        log.info("Начинаем поиск");
         if (query.isBlank()) {
-            log.info("Пришел пустой запрос");
+            log.info("Пустой запрос поиска");
             return new ArrayList<>();
         }
-        log.info("Запрос: {}", query);
+        log.info("Начинаем поиск по запросу: {}", query);
         String subString = "%" + query.toLowerCase() + "%";
         return filmStorage.getFilmsBySearch(subString, by);
     }
 
-    public List<Film> getDirectorFilmsSortedBy(int directorId, String sortBy) {
+    public List<Film> getDirectorSorted(int directorId, String sortBy) {
         log.info("Получение фильмов режиссера {} с сортировкой по {}", directorId, sortBy);
-        return filmStorage.getDirectorFilmsSortedBy(directorId, sortBy);
+        return filmStorage.getDirectorSorted(directorId, sortBy);
     }
 
 }

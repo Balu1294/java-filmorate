@@ -11,7 +11,7 @@ public interface DirectorStorage {
 
     Director updateDirector(Director director);
 
-    void deleteDirector(int directorId);
+    void removeDirector(int directorId);
 
     List<Director> getAllDirectors();
 }

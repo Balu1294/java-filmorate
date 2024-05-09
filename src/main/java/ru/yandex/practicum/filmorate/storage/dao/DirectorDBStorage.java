@@ -71,7 +71,7 @@ public class DirectorDBStorage implements DirectorStorage {
     }
 
     @Override
-    public void deleteDirector(int directorId) {
+    public void removeDirector(int directorId) {
         String sql = "DELETE FROM directors WHERE director_id = ?;";
         getDirectorById(directorId);
         jdbcTemplate.update(sql, directorId);
