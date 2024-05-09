@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -130,5 +131,31 @@ public class FilmDbStorage implements FilmStorage {
                 return film;
             }
         };
+    }
+
+    @Override
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        SqlRowSet userFilms = jdbcTemplate.queryForRowSet("select film_id from likes where film_id in (" +
+                "select film_id from likes where user_id = ?) and film_id in (" +
+                "select film_id from likes where user_id = ?)", userId, friendId);
+        if (!userFilms.next()) {
+            return new ArrayList<>();
+        }
+        String sqlQuery = "select f.*, m.name as mpa_name from films as f  join mpa as m on  f.mpa_id=m.id where f.id = ?";
+        return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
+            @Override
+            public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Film film = Film.builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .description(rs.getString("description"))
+                        .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
+                        .duration(rs.getInt("duration"))
+                        .mpa(Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("mpa_name")).build())
+                        .build();
+                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                return film;
+            }
+        }, userFilms.getInt("film_id"));
     }
 }
