@@ -75,4 +75,26 @@ public class FilmController {
         log.info("Поступил запрос на удаление фильма");
         filmService.removeFilm(id);
     }
+
+    /**
+     * Поиск по названию фильмов и по режиссёру.
+     * Возвращает список фильмов, отсортированных по популярности
+     * @param query — текст для поиска
+     * @param by — может принимать значения director (поиск по режиссёру),
+     *           title (поиск по названию), либо оба значения через запятую
+     *           при поиске одновременно и по режиссеру и по названию.
+     */
+    @GetMapping("/search")
+    public List<Film> getFilmsBySearch(@RequestParam String query,
+                                      @RequestParam String by) {
+        return filmService.getFilmsBySearch(query, by);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public List<Film> getDirectorFilmsSortedBy(
+            @PathVariable int directorId,
+            @RequestParam(value = "sortBy", required = true) String sortBy
+    ) {
+        return filmService.getDirectorFilmsSortedBy(directorId, sortBy);
+    }
 }
