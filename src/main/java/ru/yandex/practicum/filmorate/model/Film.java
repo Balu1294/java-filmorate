@@ -32,7 +32,7 @@ public class Film {
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @Builder.Default
-    int likes = 0;
+    Integer likes = 0;
     @NotNull
     Mpa mpa;
     @Builder.Default
