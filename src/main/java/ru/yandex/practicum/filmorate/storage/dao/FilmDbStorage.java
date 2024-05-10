@@ -52,7 +52,6 @@ public class FilmDbStorage implements FilmStorage {
 
         film.setId(Objects.requireNonNull(keyHolder.getKey().intValue()));
         insertDirector(film);
-        //film.setDirectors();
         return film;
     }
 
@@ -155,29 +154,36 @@ public class FilmDbStorage implements FilmStorage {
         String sql = "SELECT f.*" +
                 "FROM films f " +
                 "LEFT JOIN films_directors fd ON f.id = fd.film_id " +
-                "LEFT JOIN directors d ON fd.director_id = d.director_id ";
+                "LEFT JOIN directors d ON fd.director_id = d.director_id " +
+                "LEFT JOIN  likes AS l ON f.id=l.film_id ";
         ArrayList<Film> result = new ArrayList<>();
         SqlRowSet filmsByQuery = null;
         if (by.equals("title")) {
-            filmsByQuery = jdbcTemplate.queryForRowSet(sql + "WHERE LOWER(f.name) LIKE ?", query);
+            filmsByQuery = jdbcTemplate.queryForRowSet(sql + "WHERE LOWER(f.name) LIKE ? GROUP BY f.id ORDER BY COUNT(l.user_id) DESC", query);
         }
         if (by.equals("director")) {
-            filmsByQuery = jdbcTemplate.queryForRowSet(sql + "WHERE LOWER(d.director_name) LIKE ?", query);
+            filmsByQuery = jdbcTemplate.queryForRowSet(sql + "WHERE LOWER(d.director_name) LIKE ? GROUP BY f.id ORDER BY COUNT(l.user_id) DESC", query);
         }
         if (by.equals("director,title") || by.equals("title,director")) {
             filmsByQuery = jdbcTemplate.queryForRowSet(sql + "WHERE LOWER(f.name) LIKE ? " +
-                    "OR LOWER(d.director_name) LIKE ?", query, query);
+                    "OR LOWER(d.director_name) LIKE ? GROUP BY f.id ORDER BY COUNT(l.user_id) DESC ", query, query);
         }
+
         if (filmsByQuery != null) {
             while (filmsByQuery.next()) {
                 int filmId = filmsByQuery.getInt("id");
                 result.add(getFilmById(filmId).get());
             }
         }
+
         return result.stream()
-                .sorted((film1, film2) -> film2.getLikes() - film1.getLikes())
+                .sorted(Comparator.comparing(Film::getLikes).reversed())
                 .collect(Collectors.toList());
+
+
     }
+
+
     private void insertDirector(Film film) {
         String sql = "INSERT INTO films_directors(film_id, director_id) " +
                 "VALUES (?, ?)";
