@@ -35,7 +35,7 @@ public class DirectorController {
     }
 
     @GetMapping
-    public List<Director> getAllDirectors() {
+    public List<Director> getAllDirector() {
         return service.getAllDirectors();
     }
 }
