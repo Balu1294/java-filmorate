@@ -77,7 +77,7 @@ public class UserDbStorage implements UserStorage {
 
     // Метод подбора рекомендаций фильмов для пользователя с id
     @Override
-    public List<Integer> getRecommendedFilmsId (Integer userId) {
+    public List<Integer> getRecommendedFilmsId(Integer userId) {
         List<Integer> filmsId = new ArrayList<>();
         SqlRowSet recommendedUser = jdbcTemplate.queryForRowSet("select user_id from likes " +
                 "where film_id in (select film_id from likes where user_id = ?) and not user_id = ?" +
