@@ -6,13 +6,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,5 +74,25 @@ public class UserDbStorage implements UserStorage {
         return (rs, rowNum) -> new User(rs.getInt("id"), rs.getString("email"),
                 rs.getString("name"), rs.getString("login"),
                 LocalDate.parse(rs.getString("birthday")));
+    }
+
+    @Override
+    public List<Integer> getRecommendedFilmsId (Integer userId) {
+        List<Integer> filmsId = new ArrayList<>();
+        SqlRowSet recommendedUser = jdbcTemplate.queryForRowSet("select user_id from likes " +
+                "where film_id in (select film_id from likes where user_id = ?) and not user_id = ?" +
+                "group by user_id order by count(film_id) desc limit 1", userId, userId);
+        if (!recommendedUser.next()) {
+            return filmsId;
+        }
+        System.out.println(recommendedUser.getInt("user_id"));
+        SqlRowSet recommendedFilm = jdbcTemplate.queryForRowSet("select film_id from likes " +
+                "where not film_id in (select film_id from likes where user_id = ?) and user_id = ?",
+                userId, recommendedUser.getInt("user_id"));
+        while (recommendedFilm.next()) {
+            filmsId.add(recommendedFilm.getInt("film_id"));
+        }
+        System.out.println(filmsId);
+        return filmsId;
     }
 }

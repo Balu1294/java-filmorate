@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
@@ -22,4 +23,7 @@ public interface UserStorage {
 
     // Метод удаления пользователя по id
      void removeUser(Integer id);
+
+     // Метод подбора рекомендаций фильмов для пользователя с id
+    List<Integer> getRecommendedFilmsId(Integer userId);
 }

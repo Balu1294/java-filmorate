@@ -2,13 +2,16 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.validators.UserValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -79,5 +82,9 @@ public class UserService {
                 new NotFoundException(String.format("Пользователь с id = %d не найден", id)));
         userStorage.removeUser(id);
         log.info("Удален пользователь с id = {}", id);
+    }
+
+    public List<Integer> getRecommendedFilmsId(Integer userId) {
+        return userStorage.getRecommendedFilmsId(userId);
     }
 }
