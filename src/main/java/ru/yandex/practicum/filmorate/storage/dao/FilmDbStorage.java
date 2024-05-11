@@ -129,7 +129,7 @@ public class FilmDbStorage implements FilmStorage {
         };
     }
 
-    @Override
+    /*@Override
     public List<Film> getPopularFilmsByGenre(int genreId, int count) {
         String sqlQuery = "SELECT f.* FROM films AS f "
                 + "JOIN film_genre AS fg ON f.id = fg.film_id "
@@ -143,12 +143,62 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilmsByYear(int year, int count) {
-        String sqlQuery = "SELECT f.* FROM films AS f "
+        String sqlQuery = "SELECT f.*, COUNT(l.user_id) AS like_count FROM films AS f "
                 + "JOIN mpa AS m ON f.mpa_id = m.id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE YEAR(f.releaseDate) = ? "
                 + "GROUP BY f.id "
-                + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
+                + "ORDER BY like_count DESC LIMIT ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), year, count);
+    }*/
+    @Override
+    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+        String sqlQuery = "SELECT f.*, COUNT(l.user_id) AS like_count FROM films AS f "
+                + "JOIN film_genre AS fg ON f.id = fg.film_id "
+                + "JOIN mpa AS m ON f.mpa_id = m.id "
+                + "LEFT JOIN likes AS l ON f.id = l.film_id "
+                + "WHERE fg.genre_id = ? "
+                + "GROUP BY f.id "
+                + "ORDER BY like_count DESC LIMIT ?";
+        return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
+            @Override
+            public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Film film = Film.builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .description(rs.getString("description"))
+                        .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
+                        .duration(rs.getInt("duration"))
+                        .mpa(Mpa.builder().id(rs.getInt("id")).name(rs.getString("name")).build())
+                        .build();
+                film.setGenres(new HashSet<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                return film;
+            }
+        }, genreId, count);
+    }
+
+    @Override
+    public List<Film> getPopularFilmsByYear(int year, int count) {
+        String sqlQuery = "SELECT f.*, COUNT(l.user_id) AS like_count FROM films AS f "
+                + "JOIN mpa AS m ON f.mpa_id = m.id "
+                + "LEFT JOIN likes AS l ON f.id = l.film_id "
+                + "WHERE YEAR(f.releaseDate) = ? "
+                + "GROUP BY f.id "
+                + "ORDER BY like_count DESC LIMIT ?";
+        return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
+            @Override
+            public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Film film = Film.builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .description(rs.getString("description"))
+                        .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
+                        .duration(rs.getInt("duration"))
+                        .mpa(Mpa.builder().id(rs.getInt("id")).name(rs.getString("name")).build())
+                        .build();
+                film.setGenres(new HashSet<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                return film;
+            }
+        }, year, count);
     }
 }
