@@ -80,4 +80,5 @@ public class FilmController {
         log.info("Поступил запрос на вывод списка популярных фильмов за год {}", year);
         return filmService.getPopularFilmsByYear(year, count);
     }
+
 }
