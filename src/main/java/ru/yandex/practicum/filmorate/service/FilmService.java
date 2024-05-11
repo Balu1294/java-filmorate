@@ -106,5 +106,24 @@ public class FilmService {
 
     public List<Film> getPopularFilmsByYear(int year, int count) {
         return filmStorage.getPopularFilmsByYear(year, count);
+    }*/
+
+    public List<Film> getPopularFilms(int count) {
+        return filmStorage.getPopularFilms(count);// Реализация получения популярных фильмов без учета жанра и года
+    }
+
+
+    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+        return filmStorage.getPopularFilmsByGenre(genreId,count);// Реализация получения популярных фильмов по указанному жанру
+    }
+
+
+    public List<Film> getPopularFilmsByYear(int year, int count) {
+        return filmStorage.getPopularFilmsByYear(year,count);// Реализация получения популярных фильмов за указанный год
+    }
+
+
+    public List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count) {
+        return filmStorage.getPopularFilmsByGenreAndYear(genreId,year,count);// Реализация получения популярных фильмов по указанному жанру и году
     }
 }
