@@ -152,7 +152,7 @@ public class FilmDbStorage implements FilmStorage {
                         .duration(rs.getInt("duration"))
                         .mpa(Mpa.builder().id(rs.getInt("id")).name(rs.getString("name")).build())
                         .build();
-                film.setGenres(new HashSet<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
                 return film;
             }
         }, genreId, count);
@@ -177,7 +177,7 @@ public class FilmDbStorage implements FilmStorage {
                         .duration(rs.getInt("duration"))
                         .mpa(Mpa.builder().id(rs.getInt("id")).name(rs.getString("name")).build())
                         .build();
-                film.setGenres(new HashSet<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
                 return film;
             }
         }, year, count);
