@@ -17,10 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Primary
@@ -52,7 +49,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        String sqlQuery = "UPDATE films SET name = ?, description = ?, releaseDate = ? ,duration = ?, mpa_id=? where id = ?";
+        String sqlQuery = "UPDATE films SET name = ?, description = ?, releaseDate = ? ,duration = ?, mpa_id=? WHERE id = ?";
         jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(),
                 film.getReleaseDate(), film.getDuration(), film.getMpa().getId(), film.getId());
         return film;
@@ -60,7 +57,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getAllFilms() {
-        String sqlQuery = "SELECT * FROM films;";
+        String sqlQuery = "select f.*, m.name as mpa_name from films as f  join mpa as m on  f.mpa_id=m.id ";
         return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
             @Override
             public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -70,9 +67,9 @@ public class FilmDbStorage implements FilmStorage {
                         .description(rs.getString("description"))
                         .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
                         .duration(rs.getInt("duration"))
-                        .mpa(Mpa.builder().id(rs.getInt("id")).name(rs.getString("name")).build())
+                        .mpa(Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("mpa_name")).build())
                         .build();
-                film.setGenres(new HashSet<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
                 return film;
             }
         });
@@ -90,7 +87,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilms(Integer count) {
-        String sqlQuery = "SELECT f.* FROM films AS f "
+        String sqlQuery = "SELECT f.*,  m.name as mpa_name FROM films AS f "
                 + "JOIN mpa AS m ON  f.mpa_id=m.id "
                 + "LEFT JOIN  likes AS l ON f.id=l.film_id "
                 + "GROUP BY f.id ORDER BY COUNT(l.user_id) DESC LIMIT ?";
@@ -103,12 +100,18 @@ public class FilmDbStorage implements FilmStorage {
                         .description(rs.getString("description"))
                         .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
                         .duration(rs.getInt("duration"))
-                        .mpa(Mpa.builder().id(rs.getInt("id")).name(rs.getString("name")).build())
+                        .mpa(Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("mpa_name")).build())
                         .build();
-                film.setGenres(new HashSet<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
                 return film;
             }
         }, count);
+    }
+
+    @Override
+    public void removeFilm(Integer id) {
+        String sqlQuery = "DELETE FROM films WHERE id=?";
+        jdbcTemplate.update(sqlQuery, id);
     }
 
     public RowMapper<Film> rowMap() {
@@ -123,7 +126,7 @@ public class FilmDbStorage implements FilmStorage {
                         .duration(rs.getInt("duration"))
                         .mpa(Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("mpa_name")).build())
                         .build();
-                film.setGenres(new HashSet<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
                 return film;
             }
         };

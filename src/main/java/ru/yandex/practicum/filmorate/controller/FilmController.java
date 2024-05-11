@@ -69,7 +69,14 @@ public class FilmController {
         return filmService.getTopFilms(count);
     }
 
-    @GetMapping("/popular/genre/{genreId}")
+    /* Метод удаления фильма по id */
+    @DeleteMapping("/{filmId}")
+    public void removeFilm(@PathVariable("filmId") Integer id) {
+        log.info("Поступил запрос на удаление фильма");
+        filmService.removeFilm(id);
+    }
+
+  @GetMapping("/popular/genre/{genreId}")
     public List<Film> getPopularFilmsByGenre(@PathVariable int genreId, @RequestParam(defaultValue = "10") int count) {
         log.info("Поступил запрос на вывод списка популярных фильмов по жанру с id = {}", genreId);
         return filmService.getPopularFilmsByGenre(genreId, count);
@@ -80,5 +87,4 @@ public class FilmController {
         log.info("Поступил запрос на вывод списка популярных фильмов за год {}", year);
         return filmService.getPopularFilmsByYear(year, count);
     }
-
 }

@@ -67,7 +67,7 @@ public class UserFriendsDbStorage implements UserFriendsStorage {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new User(rs.getInt("id"), rs.getString("email"),
-                        rs.getString("login"), rs.getString("name"),
+                        rs.getString("name"), rs.getString("login"),
                         rs.getDate("birthday").toLocalDate());
             }
         };

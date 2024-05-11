@@ -19,4 +19,7 @@ public interface UserStorage {
 
     // Метод получения пользователя по id
     Optional<User> getUserById(Integer id);
+
+    // Метод удаления пользователя по id
+     void removeUser(Integer id);
 }
