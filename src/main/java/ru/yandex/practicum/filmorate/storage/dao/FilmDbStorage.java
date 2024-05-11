@@ -156,6 +156,7 @@ public class FilmDbStorage implements FilmStorage {
                 "LIMIT ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), year, count);
     }
+
     @Override
     public List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count) {
         String sqlQuery = "SELECT f.*, m.name AS mpa_name FROM films AS f "
