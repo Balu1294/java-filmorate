@@ -131,4 +131,27 @@ public class FilmDbStorage implements FilmStorage {
             }
         };
     }
+
+    @Override
+    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+        String sqlQuery = "SELECT f.* FROM films AS f "
+                + "JOIN film_genre AS fg ON f.id = fg.film_id "
+                + "JOIN mpa AS m ON f.mpa_id = m.id "
+                + "LEFT JOIN likes AS l ON f.id = l.film_id "
+                + "WHERE fg.genre_id = ? "
+                + "GROUP BY f.id "
+                + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
+        return jdbcTemplate.query(sqlQuery, rowMap(), genreId, count);
+    }
+
+    @Override
+    public List<Film> getPopularFilmsByYear(int year, int count) {
+        String sqlQuery = "SELECT f.* FROM films AS f "
+                + "JOIN mpa AS m ON f.mpa_id = m.id "
+                + "LEFT JOIN likes AS l ON f.id = l.film_id "
+                + "WHERE YEAR(f.releaseDate) = ? "
+                + "GROUP BY f.id "
+                + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
+        return jdbcTemplate.query(sqlQuery, rowMap(), year, count);
+    }
 }
