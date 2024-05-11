@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Review;
 @Slf4j
 @UtilityClass
 public class ReviewValidator {
+
     public void validationReviews(Review review) {
         if (review.getUserId() < 1) {
             throw new NotFoundException("id пользователя не может быть меньше 1");

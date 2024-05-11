@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.validators.ReviewValidator;
 
 import java.util.List;
@@ -16,22 +18,32 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewStorage reviewStorage;
+    private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
 
     public Review addReview(Review review) {
         ReviewValidator.validationReviews(review);
+        userStorage.getUserById(review.getUserId()).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователя с id= %d отсутствует в базе", review.getUserId())));
+        filmStorage.getFilmById(review.getFilmId()).orElseThrow(() ->
+                new NotFoundException(String.format("Фильм с id= %d отсутствует в базе", review.getFilmId())));
         log.info("Пользователь с id = {} добавляет отзыв к фильму с id = {}", review.getUserId(), review.getFilmId());
         return reviewStorage.addReview(review);
     }
 
     public Review updateReview(Review review) {
         ReviewValidator.validationReviews(review);
+        userStorage.getUserById(review.getUserId()).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователя с id= %d отсутствует в базе", review.getUserId())));
+        filmStorage.getFilmById(review.getFilmId()).orElseThrow(() ->
+                new NotFoundException(String.format("Фильм с id= %d отсутствует в базе", review.getFilmId())));
         log.info("Пользователь с id = {} обновляет отзыв к фильму с id = {}", review.getUserId(), review.getFilmId());
         return reviewStorage.updateReview(review);
     }
 
     public Review getReviewById(Integer id) {
         return reviewStorage.getReviewById(id).orElseThrow(() ->
-                new NotFoundException(String.format("Отзыв с id= %d отсутствует в базу", id)));
+                new NotFoundException(String.format("Отзыв с id= %d отсутствует в базe", id)));
     }
 
     public void removeReviewById(Integer id) {
