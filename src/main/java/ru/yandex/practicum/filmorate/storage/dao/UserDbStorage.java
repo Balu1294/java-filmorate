@@ -76,6 +76,7 @@ public class UserDbStorage implements UserStorage {
                 LocalDate.parse(rs.getString("birthday")));
     }
 
+    // Метод подбора рекомендаций фильмов для пользователя с id
     @Override
     public List<Integer> getRecommendedFilmsId (Integer userId) {
         List<Integer> filmsId = new ArrayList<>();
@@ -85,14 +86,12 @@ public class UserDbStorage implements UserStorage {
         if (!recommendedUser.next()) {
             return filmsId;
         }
-        System.out.println(recommendedUser.getInt("user_id"));
         SqlRowSet recommendedFilm = jdbcTemplate.queryForRowSet("select film_id from likes " +
                 "where not film_id in (select film_id from likes where user_id = ?) and user_id = ?",
                 userId, recommendedUser.getInt("user_id"));
         while (recommendedFilm.next()) {
             filmsId.add(recommendedFilm.getInt("film_id"));
         }
-        System.out.println(filmsId);
         return filmsId;
     }
 }

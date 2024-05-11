@@ -96,14 +96,4 @@ public class FilmService {
         filmStorage.removeFilm(id);
         log.info("Удален фильм с id = %d", id);
     }
-
-    public List<Film> getRecommendFilms(Integer userId) {
-        List<Film> recommendedFilms = new ArrayList<>();
-        List<Integer> filmsId = userService.getRecommendedFilmsId(userId);
-        for (Integer filmId : filmsId) {
-            recommendedFilms.add(getFilmById(filmId));
-        }
-        return recommendedFilms;
-    }
-
 }

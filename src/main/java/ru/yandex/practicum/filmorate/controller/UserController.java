@@ -83,8 +83,9 @@ public class UserController {
         userService.removeUser(id);
     }
 
+    // Метод подбора рекомендаций фильмов для пользователя с id
     @GetMapping("{id}/recommendations")
     public List<Film> getRecommendedFilms(@PathVariable Integer id) {
-        return filmService.getRecommendFilms(id);
+        return userService.getRecommendedFilms(id);
     }
 }
