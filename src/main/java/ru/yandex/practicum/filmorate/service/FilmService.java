@@ -84,4 +84,12 @@ public class FilmService {
         List<Film> topFilms = new ArrayList<>(filmStorage.getPopularFilms(count));
         return topFilms;
     }
+
+    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+        return filmStorage.getPopularFilmsByGenre(genreId, count);
+    }
+
+    public List<Film> getPopularFilmsByYear(int year, int count) {
+        return filmStorage.getPopularFilmsByYear(year, count);
+    }
 }
