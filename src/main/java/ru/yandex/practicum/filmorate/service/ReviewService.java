@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.validators.ReviewValidator;
 
 import java.util.List;
@@ -16,22 +18,26 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewStorage reviewStorage;
+    private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
 
     public Review addReview(Review review) {
         ReviewValidator.validationReviews(review);
+        validUserandFilm(review.getUserId(), review.getFilmId());
         log.info("Пользователь с id = {} добавляет отзыв к фильму с id = {}", review.getUserId(), review.getFilmId());
         return reviewStorage.addReview(review);
     }
 
     public Review updateReview(Review review) {
         ReviewValidator.validationReviews(review);
+        validUserandFilm(review.getUserId(), review.getFilmId());
         log.info("Пользователь с id = {} обновляет отзыв к фильму с id = {}", review.getUserId(), review.getFilmId());
         return reviewStorage.updateReview(review);
     }
 
     public Review getReviewById(Integer id) {
         return reviewStorage.getReviewById(id).orElseThrow(() ->
-                new NotFoundException(String.format("Отзыв с id= %d отсутствует в базу", id)));
+                new NotFoundException(String.format("Отзыв с id= %d отсутствует в базe", id)));
     }
 
     public void removeReviewById(Integer id) {
@@ -62,5 +68,13 @@ public class ReviewService {
         getReviewById(reviewId);
         reviewStorage.deleteReaction(reviewId, userId);
         log.info("Удалена реакция к отзыву с id= {} от пользователя с id= {}", reviewId, userId);
+    }
+
+    private void validUserandFilm(Integer userId, Integer filmId) {
+        userStorage.getUserById(userId).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователя с id= %d отсутствует в базе", userId)));
+        filmStorage.getFilmById(filmId).orElseThrow(() ->
+                new NotFoundException(String.format("Фильм с id= %d отсутствует в базе", filmId)));
+
     }
 }
