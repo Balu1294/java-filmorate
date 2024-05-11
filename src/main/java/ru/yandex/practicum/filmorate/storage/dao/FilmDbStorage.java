@@ -133,31 +133,20 @@ public class FilmDbStorage implements FilmStorage {
         };
     }
 
+    //Метод вывода общих фильмов с другим пользователем
     @Override
     public List<Film> getCommonFilms(Integer userId, Integer friendId) {
-        SqlRowSet userFilms = jdbcTemplate.queryForRowSet("select film_id from likes where film_id in (" +
-                "select film_id from likes where user_id = ?) and film_id in (" +
-                "select film_id from likes where user_id = ?)", userId, friendId);
+        SqlRowSet userFilms = jdbcTemplate.queryForRowSet("SELECT u.film_id " +
+                "FROM likes as u " +
+                "INNER JOIN (SELECT film_id FROM likes WHERE user_id = ? ) as f " +
+                "ON u.film_id = f.film_id " +
+                "WHERE user_id = ? ;", friendId, userId);
         if (!userFilms.next()) {
             return new ArrayList<>();
         }
         String sqlQuery = "select f.*, m.name as mpa_name from films as f  join mpa as m on  f.mpa_id=m.id " +
                 "LEFT JOIN  likes AS l ON f.id=l.film_id " +
                 "where f.id = ? order by count(l.user_id) desc";
-        return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
-            @Override
-            public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Film film = Film.builder()
-                        .id(rs.getInt("id"))
-                        .name(rs.getString("name"))
-                        .description(rs.getString("description"))
-                        .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
-                        .duration(rs.getInt("duration"))
-                        .mpa(Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("mpa_name")).build())
-                        .build();
-                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
-                return film;
-            }
-        }, userFilms.getInt("film_id"));
+        return jdbcTemplate.query(sqlQuery, rowMap(), userFilms.getInt("film_id"));
     }
 }
