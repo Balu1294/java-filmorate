@@ -63,11 +63,11 @@ public class FilmController {
     }
 
     /*возвращает список топ фильмов*/
-    @GetMapping("/popular")
+    /*@GetMapping("/popular")
     public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
         log.info("Поступил запрос на вывод списка топовых фильмов");
         return filmService.getTopFilms(count);
-    }
+    }*/
 
     /* Метод удаления фильма по id */
     @DeleteMapping("/{filmId}")
@@ -86,5 +86,24 @@ public class FilmController {
     public List<Film> getPopularFilmsByYear(@PathVariable int year, @RequestParam(defaultValue = "10") int count) {
         log.info("Поступил запрос на вывод списка популярных фильмов за год {}", year);
         return filmService.getPopularFilmsByYear(year, count);
+    }
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(
+            @RequestParam(defaultValue = "10") int count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year) {
+        if (genreId != null && year != null) {
+            log.info("Поступил запрос на вывод списка популярных фильмов по жанру с id = {} за год {}", genreId, year);
+            return filmService.getPopularFilmsByGenreAndYear(genreId, year, count);
+        } else if (genreId != null) {
+            log.info("Поступил запрос на вывод списка популярных фильмов по жанру с id = {}", genreId);
+            return filmService.getPopularFilmsByGenre(genreId, count);
+        } else if (year != null) {
+            log.info("Поступил запрос на вывод списка популярных фильмов за год {}", year);
+            return filmService.getPopularFilmsByYear(year, count);
+        } else {
+            log.info("Поступил запрос на вывод списка популярных фильмов");
+            return filmService.getPopularFilms(count);
+        }
     }
 }

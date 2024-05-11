@@ -26,7 +26,9 @@ public interface FilmStorage {
     // Метод удаления фильма по id
     void removeFilm(Integer id);
 
-  List<Film> getPopularFilmsByGenre(int genreId, int count);
+    List<Film> getPopularFilmsByGenre(int genreId, int count);
 
     List<Film> getPopularFilmsByYear(int year, int count);
+
+    List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count);
 }
