@@ -99,8 +99,7 @@ public class FilmService {
         log.info("Удален фильм с id = %d", id);
     }
 
-
-    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+   /*public List<Film> getPopularFilmsByGenre(int genreId, int count) {
         return filmStorage.getPopularFilmsByGenre(genreId, count);
     }
 
