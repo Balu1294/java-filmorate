@@ -76,18 +76,6 @@ public class FilmController {
         filmService.removeFilm(id);
     }
 
-  @GetMapping("/popular/genre/{genreId}")
-    public List<Film> getPopularFilmsByGenre(@PathVariable int genreId, @RequestParam(defaultValue = "10") int count) {
-        log.info("Поступил запрос на вывод списка популярных фильмов по жанру с id = {}", genreId);
-        return filmService.getPopularFilmsByGenre(genreId, count);
-    }
-
-    @GetMapping("/popular/year/{year}")
-    public List<Film> getPopularFilmsByYear(@PathVariable int year, @RequestParam(defaultValue = "10") int count) {
-        log.info("Поступил запрос на вывод списка популярных фильмов за год {}", year);
-        return filmService.getPopularFilmsByYear(year, count);
-    }
-
     @GetMapping("/popular")
     public List<Film> getPopularFilms(
             @RequestParam(defaultValue = "10") int count,

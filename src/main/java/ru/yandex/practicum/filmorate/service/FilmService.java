@@ -97,14 +97,6 @@ public class FilmService {
         log.info("Удален фильм с id = %d", id);
     }
 
-   /*public List<Film> getPopularFilmsByGenre(int genreId, int count) {
-        return filmStorage.getPopularFilmsByGenre(genreId, count);
-    }
-
-    public List<Film> getPopularFilmsByYear(int year, int count) {
-        return filmStorage.getPopularFilmsByYear(year, count);
-    }*/
-
     public List<Film> getPopularFilms(int count) {
         return filmStorage.getPopularFilms(count);// Реализация получения популярных фильмов без учета жанра и года
     }

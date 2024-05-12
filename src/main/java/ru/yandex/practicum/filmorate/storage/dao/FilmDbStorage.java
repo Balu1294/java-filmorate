@@ -164,7 +164,7 @@ public class FilmDbStorage implements FilmStorage {
                 + "JOIN mpa AS m ON f.mpa_id = m.id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE fg.genre_id = ? AND YEAR(f.releaseDate) = ? "
-                + "GROUP BY f.id "
+                + "GROUP BY f.id, m.name " // Включаем столбец m.name в GROUP BY
                 + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
         return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
             @Override
