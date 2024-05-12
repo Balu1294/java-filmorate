@@ -226,25 +226,25 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> getPopularFilmsByGenre(int genreId, int count) {
-        String sqlQuery = "SELECT f.*,  m.name as mpa_name, COUNT(l.user_id) AS like_count FROM films AS f "+
-                "JOIN mpa AS m ON  f.mpa_id=m.id "+
-                "JOIN films_genre AS fg ON f.id = fg.film_id " +
-                "LEFT JOIN likes AS l ON f.id = l.film_id " +
-                "WHERE fg.genre_id = ? " +
-                "GROUP BY f.id, m.name " +
-                "ORDER BY like_count DESC " +
-                "LIMIT ?";
+        String sqlQuery = "SELECT f.*,  m.name as mpa_name, COUNT(l.user_id) AS like_count FROM films AS f "
+                + "JOIN mpa AS m ON  f.mpa_id=m.id "
+                + "JOIN films_genre AS fg ON f.id = fg.film_id "
+                + "LEFT JOIN likes AS l ON f.id = l.film_id "
+                + "WHERE fg.genre_id = ? "
+                + "GROUP BY f.id, m.name "
+                + "ORDER BY like_count DESC "
+                + "LIMIT ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), genreId, count);
     }
 
     public List<Film> getPopularFilmsByYear(int year, int count) {
-        String sqlQuery = "SELECT f.*,  m.name as mpa_name, COUNT(l.user_id) AS like_count FROM films AS f " +
-                "JOIN mpa AS m ON  f.mpa_id=m.id "+
-                "LEFT JOIN likes AS l ON f.id = l.film_id " +
-                "WHERE YEAR(f.releaseDate) = ? " +
-                "GROUP BY f.id, m.name " +
-                "ORDER BY like_count DESC " +
-                "LIMIT ?";
+        String sqlQuery = "SELECT f.*,  m.name as mpa_name, COUNT(l.user_id) AS like_count FROM films AS f "
+                + "JOIN mpa AS m ON  f.mpa_id=m.id "
+                + "LEFT JOIN likes AS l ON f.id = l.film_id "
+                + "WHERE YEAR(f.releaseDate) = ? "
+                + "GROUP BY f.id, m.name "
+                + "ORDER BY like_count DESC "
+                + "LIMIT ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), year, count);
     }
 
