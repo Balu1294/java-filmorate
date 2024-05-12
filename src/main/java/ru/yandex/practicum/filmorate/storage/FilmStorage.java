@@ -27,6 +27,12 @@ public interface FilmStorage {
     // Метод удаления фильма по id
     void removeFilm(Integer id);
 
+    List<Film> getFilmsBySearch(String query, String by);
+
+    List<Director> selectDirectors(int filmId);
+
+    List<Film> getDirectorSorted(int directorId, String sortBy);
+
     List<Film> getPopularFilmsByGenre(int genreId, int count);
 
     List<Film> getPopularFilmsByYear(int year, int count);
