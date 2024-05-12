@@ -226,23 +226,23 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> getPopularFilmsByGenre(int genreId, int count) {
-        String sqlQuery = "SELECT f.*,  m.name as mpa_name, COUNT(l.user_id) AS like_count FROM films AS f "
+        String sqlQuery = "SELECT f.*, m.name AS mpa_name, COUNT(l.user_id) AS like_count FROM films AS f "
                 + "JOIN mpa AS m ON  f.mpa_id=m.id "
                 + "JOIN films_genre AS fg ON f.id = fg.film_id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE fg.genre_id = ? "
-                + "GROUP BY f.id, m.name "
+                + "GROUP BY f.id, f.name, f.description, f.releaseDate, f.duration, f.mpa_id, m.name " // Включаем все столбцы в GROUP BY
                 + "ORDER BY like_count DESC "
                 + "LIMIT ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), genreId, count);
     }
 
     public List<Film> getPopularFilmsByYear(int year, int count) {
-        String sqlQuery = "SELECT f.*,  m.name as mpa_name, COUNT(l.user_id) AS like_count FROM films AS f "
+        String sqlQuery = "SELECT f.*, m.name AS mpa_name, COUNT(l.user_id) AS like_count FROM films AS f "
                 + "JOIN mpa AS m ON  f.mpa_id=m.id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE YEAR(f.releaseDate) = ? "
-                + "GROUP BY f.id, m.name "
+                + "GROUP BY f.id, f.name, f.description, f.releaseDate, f.duration, f.mpa_id, m.name " // Включаем все столбцы в GROUP BY
                 + "ORDER BY like_count DESC "
                 + "LIMIT ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), year, count);
@@ -255,7 +255,7 @@ public class FilmDbStorage implements FilmStorage {
                 + "JOIN mpa AS m ON f.mpa_id = m.id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE fg.genre_id = ? AND YEAR(f.releaseDate) = ? "
-                + "GROUP BY f.id, m.name " // Включаем столбец m.name в GROUP BY
+                + "GROUP BY f.id, f.name, f.description, f.releaseDate, f.duration, f.mpa_id, m.name " // Включаем все столбцы в GROUP BY
                 + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
         return jdbcTemplate.query(sqlQuery, rowMap(), genreId, year, count);
     }
