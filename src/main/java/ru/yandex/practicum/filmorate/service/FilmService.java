@@ -115,4 +115,20 @@ public class FilmService {
     public List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count) {
         return filmStorage.getPopularFilmsByGenreAndYear(genreId,year,count);// Реализация получения популярных фильмов по указанному жанру и году
     }
+
+    public List<Film> getFilmsBySearch(String query, String by) {
+        log.info("Начинаем поиск");
+        if (query.isBlank()) {
+            log.info("Пустой запрос поиска");
+            return new ArrayList<>();
+        }
+        log.info("Начинаем поиск по запросу: {}", query);
+        String subString = "%" + query.toLowerCase() + "%";
+        return filmStorage.getFilmsBySearch(subString, by);
+    }
+
+    public List<Film> getDirectorSorted(int directorId, String sortBy) {
+        log.info("Получение фильмов режиссера {} с сортировкой по {}", directorId, sortBy);
+        return filmStorage.getDirectorSorted(directorId, sortBy);
+    }
 }

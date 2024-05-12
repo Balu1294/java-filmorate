@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
@@ -31,4 +32,10 @@ public interface FilmStorage {
     List<Film> getPopularFilmsByYear(int year, int count);
 
     List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count);
+
+    List<Director> selectDirectors(int filmId);
+
+    List<Film> getDirectorSorted(int directorId, String sortBy);
+
+    List<Film> getFilmsBySearch(String query, String by);
 }
