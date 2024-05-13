@@ -102,4 +102,5 @@ public class FilmService {
         log.info("Выводится список фильмов для пользователя с id = {} и пользователя с id = {}", userId, friendId);
         return filmStorage.getCommonFilms(userId,friendId);
     }
+
 }
