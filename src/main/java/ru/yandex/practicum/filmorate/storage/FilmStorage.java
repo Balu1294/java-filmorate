@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
@@ -26,6 +27,14 @@ public interface FilmStorage {
     // Метод удаления фильма по id
     void removeFilm(Integer id);
 
+
+    List<Film> getFilmsBySearch(String query, String by);
+
+    List<Director> selectDirectors(int filmId);
+
+    List<Film> getDirectorSorted(int directorId, String sortBy);
+
     //Метод вывода общих фильмов с другим пользователем
     List<Film> getCommonFilms(Integer userId, Integer friendId);
+
 }

@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,8 @@ public class FilmDbStorageTest {
                 .duration(90)
                 .mpa(new Mpa(4, "R"))
                 .build();
+        List<Director> dirList = new ArrayList<>(1);
+        filmTest.setDirectors(dirList);
         filmDbStorage.addFilm(filmTest);
     }
 
@@ -90,6 +94,8 @@ public class FilmDbStorageTest {
                 .releaseDate(LocalDate.of(2015, 1, 1))
                 .mpa(new Mpa(1, "G"))
                 .build();
+        List<Director> dirList = new ArrayList<>(1);
+        newFilm.setDirectors(dirList);
         filmDbStorage.addFilm(newFilm);
         List<Film> films = filmDbStorage.getAllFilms();
         Assertions.assertThat(films).isNotEmpty().isNotNull().doesNotHaveDuplicates();

@@ -76,7 +76,29 @@ public class FilmController {
         filmService.removeFilm(id);
     }
 
-    // Метод для вывода общих по лайкам фильмов с другим пользователем
+
+    /**
+     * Поиск по названию фильмов и по режиссёру.
+     * Возвращает список фильмов, отсортированных по популярности
+     * @param query — текст для поиска
+     * @param by — может принимать значения director (поиск по режиссёру),
+     *          title (поиск по названию), либо оба значения через запятую
+     *           при поиске одновременно и по режиссеру и по названию.
+     */
+    @GetMapping("/search")
+    public List<Film> getFilmsBySearch(@RequestParam String query,
+                                      @RequestParam String by) {
+        return filmService.getFilmsBySearch(query, by);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public List<Film> getDirectorSorted(
+            @PathVariable int directorId,
+            @RequestParam(value = "sortBy", required = true) String sortBy) {
+        return filmService.getDirectorSorted(directorId, sortBy);
+    }
+
+    // Метод для вывода общих по лайкам фильмов с другим пользователем/
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam Integer userId,
                                      @RequestParam Integer friendId) {
