@@ -76,6 +76,7 @@ public class FilmController {
         filmService.removeFilm(id);
     }
 
+
     /**
      * Поиск по названию фильмов и по режиссёру.
      * Возвращает список фильмов, отсортированных по популярности
@@ -116,5 +117,13 @@ public class FilmController {
             log.info("Поступил запрос на вывод списка популярных фильмов");
             return filmService.getPopularFilms(count);
         }
+    }
+  
+    // Метод для вывода общих по лайкам фильмов с другим пользователем
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam Integer userId,
+                                     @RequestParam Integer friendId) {
+        return filmService.getCommonFilms(userId, friendId);
+
     }
 }

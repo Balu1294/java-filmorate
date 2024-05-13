@@ -22,4 +22,7 @@ public interface UserStorage {
 
     // Метод удаления пользователя по id
      void removeUser(Integer id);
+
+     // Метод подбора рекомендаций фильмов для пользователя с id
+    List<Integer> getRecommendedFilmsId(Integer userId);
 }
