@@ -119,12 +119,8 @@ public class FilmController {
         }
     }
   
-    // Метод для вывода общих по лайкам фильмов с другим пользователем
-            @RequestParam(value = "sortBy", required = true) String sortBy) {
-        return filmService.getDirectorSorted(directorId, sortBy);
-    }
 
-    // Метод для вывода общих по лайкам фильмов с другим пользователем/
+     // Метод для вывода общих по лайкам фильмов с другим пользователем/
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam Integer userId,
                                      @RequestParam Integer friendId) {
