@@ -96,4 +96,11 @@ public class FilmService {
         filmStorage.removeFilm(id);
         log.info("Удален фильм с id = %d", id);
     }
+
+    // Метод для вывода общих по лайкам фильмов с другим пользователем
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        log.info("Выводится список фильмов для пользователя с id = {} и пользователя с id = {}", userId, friendId);
+        return filmStorage.getCommonFilms(userId,friendId);
+    }
+
 }
