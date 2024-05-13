@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.validators.UserValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,6 +21,7 @@ import java.util.List;
 public class UserService {
 
     private final UserStorage userStorage;
+    private final FilmStorage filmStorage;
     private final UsersFriendsService friendsService;
 
     public User createUser(User user) throws ValidationException {
@@ -79,5 +83,16 @@ public class UserService {
                 new NotFoundException(String.format("Пользователь с id = %d не найден", id)));
         userStorage.removeUser(id);
         log.info("Удален пользователь с id = {}", id);
+    }
+
+    // Метод подбора рекомендаций фильмов для пользователя с id
+    public List<Film> getRecommendedFilms(Integer userId) {
+        log.info("Запрос на вывод рекомендаций фильмов");
+        List<Film> recommendedFilms = new ArrayList<>();
+        List<Integer> filmsId = userStorage.getRecommendedFilmsId(userId);
+        for (Integer filmId : filmsId) {
+            recommendedFilms.add(filmStorage.getFilmById(filmId).orElseThrow());
+        }
+        return recommendedFilms;
     }
 }

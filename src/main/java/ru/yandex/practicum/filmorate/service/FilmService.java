@@ -97,6 +97,7 @@ public class FilmService {
         log.info("Удален фильм с id = %d", id);
     }
 
+
     public List<Film> getFilmsBySearch(String query, String by) {
         log.info("Начинаем поиск");
         if (query.isBlank()) {
@@ -111,6 +112,12 @@ public class FilmService {
     public List<Film> getDirectorSorted(int directorId, String sortBy) {
         log.info("Получение фильмов режиссера {} с сортировкой по {}", directorId, sortBy);
         return filmStorage.getDirectorSorted(directorId, sortBy);
+    }
+    // Метод для вывода общих по лайкам фильмов с другим пользователем
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        log.info("Выводится список фильмов для пользователя с id = {} и пользователя с id = {}", userId, friendId);
+        return filmStorage.getCommonFilms(userId,friendId);
+
     }
 
 }

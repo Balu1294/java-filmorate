@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
@@ -17,6 +19,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final FilmService filmService;
 
     @PostMapping
     public User createUser(@RequestBody @Valid User user) throws ValidationException {
@@ -78,5 +81,11 @@ public class UserController {
     public void removeUser(@PathVariable("userId") Integer id) {
         log.info("Поступил запрос на удаление пользователя");
         userService.removeUser(id);
+    }
+
+    // Метод подбора рекомендаций фильмов для пользователя с id
+    @GetMapping("{id}/recommendations")
+    public List<Film> getRecommendedFilms(@PathVariable Integer id) {
+        return userService.getRecommendedFilms(id);
     }
 }
