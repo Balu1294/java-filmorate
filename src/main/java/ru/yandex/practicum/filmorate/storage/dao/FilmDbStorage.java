@@ -255,8 +255,23 @@ public class FilmDbStorage implements FilmStorage {
                 + "JOIN mpa AS m ON f.mpa_id = m.id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE fg.genre_id = ? AND YEAR(f.releaseDate) = ? "
-                + "GROUP BY f.id, f.name, f.description, f.releaseDate, f.duration, f.mpa_id, m.name " // Включаем все столбцы в GROUP BY
+                + "GROUP BY f.id " // Включаем столбец m.name в GROUP BY -- , m.name
                 + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
-        return jdbcTemplate.query(sqlQuery, rowMap(), genreId, year, count);
+        return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
+            @Override
+            public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Film film = Film.builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .description(rs.getString("description"))
+                        .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
+                        .duration(rs.getInt("duration"))
+                        .mpa(Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("mpa_name")).build())
+                        .directors(selectDirectors(rs.getInt("id"))) // добавляю режисера
+                        .build();
+                film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
+                return film;
+            }
+        }, genreId, year, count);
     }
 }
