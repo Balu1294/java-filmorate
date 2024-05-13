@@ -97,4 +97,24 @@ public class FilmController {
     ) {
         return filmService.getDirectorSorted(directorId, sortBy);
     }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(
+            @RequestParam(defaultValue = "10") int count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year) {
+        if (genreId != null && year != null) {
+            log.info("Поступил запрос на вывод списка популярных фильмов по жанру с id = {} за год {}", genreId, year);
+            return filmService.getPopularFilmsByGenreAndYear(genreId, year, count);
+        } else if (genreId != null) {
+            log.info("Поступил запрос на вывод списка популярных фильмов по жанру с id = {}", genreId);
+            return filmService.getPopularFilmsByGenre(genreId, count);
+        } else if (year != null) {
+            log.info("Поступил запрос на вывод списка популярных фильмов за год {}", year);
+            return filmService.getPopularFilmsByYear(year, count);
+        } else {
+            log.info("Поступил запрос на вывод списка популярных фильмов");
+            return filmService.getPopularFilms(count);
+        }
+    }
 }
