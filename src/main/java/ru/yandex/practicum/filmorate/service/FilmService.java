@@ -136,5 +136,6 @@ public class FilmService {
     public List<Film> getCommonFilms(Integer userId, Integer friendId) {
         log.info("Выводится список фильмов для пользователя с id = {} и пользователя с id = {}", userId, friendId);
         return filmStorage.getCommonFilms(userId,friendId);
+
     }
 }

@@ -83,6 +83,7 @@ public class FilmController {
      * @param query — текст для поиска
      * @param by — может принимать значения director (поиск по режиссёру),
      *           title (поиск по названию), либо оба значения через запятую
+     *          title (поиск по названию), либо оба значения через запятую
      *           при поиске одновременно и по режиссеру и по названию.
      */
     @GetMapping("/search")
@@ -94,8 +95,7 @@ public class FilmController {
     @GetMapping("/director/{directorId}")
     public List<Film> getDirectorSorted(
             @PathVariable int directorId,
-            @RequestParam(value = "sortBy", required = true) String sortBy
-    ) {
+            @RequestParam(value = "sortBy", required = true) String sortBy) {
         return filmService.getDirectorSorted(directorId, sortBy);
     }
 
@@ -120,6 +120,11 @@ public class FilmController {
     }
   
     // Метод для вывода общих по лайкам фильмов с другим пользователем
+            @RequestParam(value = "sortBy", required = true) String sortBy) {
+        return filmService.getDirectorSorted(directorId, sortBy);
+    }
+
+    // Метод для вывода общих по лайкам фильмов с другим пользователем/
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam Integer userId,
                                      @RequestParam Integer friendId) {

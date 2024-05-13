@@ -50,6 +50,7 @@ public class FilmDbStorage implements FilmStorage {
             stmt.setInt(5, film.getMpa().getId());
             return stmt;
         }, keyHolder);
+
         film.setId(Objects.requireNonNull(keyHolder.getKey().intValue()));
         insertDirector(film);
         return film;
@@ -239,8 +240,7 @@ public class FilmDbStorage implements FilmStorage {
         return films;
     }
 
-
-    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+   public List<Film> getPopularFilmsByGenre(int genreId, int count) {
         String sqlQuery = "SELECT f.*, m.name as mpa_name, COUNT(l.user_id) AS like_count " +
                 "FROM films AS f " +
                 "JOIN films_genre AS fg ON f.id = fg.film_id " +
@@ -308,4 +308,5 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlQuery, rowMap(), userFilms.getInt("film_id"));
 
     }
+
 }

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Director;
 
@@ -42,4 +43,5 @@ public interface FilmStorage {
 
     //Метод вывода общих фильмов с другим пользователем
     List<Film> getCommonFilms(Integer userId, Integer friendId);
+
 }
