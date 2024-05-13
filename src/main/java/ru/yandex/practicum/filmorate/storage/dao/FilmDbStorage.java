@@ -31,6 +31,7 @@ import static ru.yandex.practicum.filmorate.storage.dao.DirectorDBStorage.direct
 @Component
 @AllArgsConstructor
 public class FilmDbStorage implements FilmStorage {
+
     private final JdbcTemplate jdbcTemplate;
     private final GenreDbStorage genreDbStorage;
 
@@ -48,10 +49,12 @@ public class FilmDbStorage implements FilmStorage {
             stmt.setInt(5, film.getMpa().getId());
             return stmt;
         }, keyHolder);
+
         film.setId(Objects.requireNonNull(keyHolder.getKey().intValue()));
         insertDirector(film);
         return film;
     }
+
 
     @Override
     public Film updateFilm(Film film) {
@@ -146,6 +149,7 @@ public class FilmDbStorage implements FilmStorage {
         };
     }
 
+
     @Override
     public List<Film> getFilmsBySearch(String query, String by) {
         String sql = "SELECT f.*" +
@@ -213,7 +217,7 @@ public class FilmDbStorage implements FilmStorage {
         }
 
         List<Film> films = new ArrayList<>();
-        for (int id : filmsIds) {
+        for (int id: filmsIds) {
             films.add(getFilmById(id).get());
         }
 
@@ -266,6 +270,7 @@ public class FilmDbStorage implements FilmStorage {
                 + "JOIN mpa AS m ON f.mpa_id = m.id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE fg.genre_id = ? AND YEAR(f.releaseDate) = ? "
+                + "GROUP BY f.id, m.name " // Включаем столбец m.name в GROUP BY
                 + "GROUP BY f.id " // Включаем столбец m.name в GROUP BY -- , m.name
                 + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
         return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
@@ -288,7 +293,7 @@ public class FilmDbStorage implements FilmStorage {
 
     //Метод вывода общих фильмов с другим пользователем
     @Override
-    public List<Film> getCommonFilms (Integer userId, Integer friendId){
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
         SqlRowSet userFilms = jdbcTemplate.queryForRowSet("SELECT u.film_id " +
                 "FROM likes as u " +
                 "INNER JOIN (SELECT film_id FROM likes WHERE user_id = ? ) as f " +

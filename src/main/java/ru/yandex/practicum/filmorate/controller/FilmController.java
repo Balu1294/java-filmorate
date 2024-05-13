@@ -17,36 +17,44 @@ import java.util.List;
 @Slf4j
 public class FilmController {
     private static final String PATH_LIKE = "/{id}/like/{userId}";
+
     private final FilmService filmService;
+
     @Autowired
     public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
+
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на добавление нового фильма");
         return filmService.addFilm(film);
     }
+
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на обновление данных о фильме с id = {}", film.getId());
         return filmService.updateFilm(film);
     }
+
     @GetMapping
     public List<Film> getAllFilms() {
         log.info("Поступил запрос на вывод списка всех фильмов");
         return filmService.getAllFilms();
     }
+
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable Integer id) {
         return filmService.getFilmById(id);
     }
+
     /*пользователь ставит лайк фильму */
     @PutMapping(PATH_LIKE)
     public void userLikedFilm(@PathVariable Integer id, @PathVariable Integer userId) {
         log.info("Поступил запрос на добавление лайка к фильму");
         filmService.addLike(id, userId);
     }
+
     /*пользователь удаляет лайк */
     @DeleteMapping(PATH_LIKE)
     public void userRemovedLike(@PathVariable Integer id, @PathVariable Integer userId) throws ValidationException {
@@ -55,12 +63,10 @@ public class FilmController {
     }
 
     /*возвращает список топ фильмов*/
-    @GetMapping("/popular")
     /*@GetMapping("/popular")
     public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
         log.info("Поступил запрос на вывод списка топовых фильмов");
         return filmService.getTopFilms(count);
-    }
     }*/
 
     /* Метод удаления фильма по id */
@@ -77,6 +83,7 @@ public class FilmController {
      * @param query — текст для поиска
      * @param by — может принимать значения director (поиск по режиссёру),
      *           title (поиск по названию), либо оба значения через запятую
+     *          title (поиск по названию), либо оба значения через запятую
      *           при поиске одновременно и по режиссеру и по названию.
      */
     @GetMapping("/search")
@@ -88,8 +95,7 @@ public class FilmController {
     @GetMapping("/director/{directorId}")
     public List<Film> getDirectorSorted(
             @PathVariable int directorId,
-            @RequestParam(value = "sortBy", required = true) String sortBy
-    ) {
+            @RequestParam(value = "sortBy", required = true) String sortBy) {
         return filmService.getDirectorSorted(directorId, sortBy);
     }
 
@@ -113,7 +119,7 @@ public class FilmController {
         }
     }
 
-    // Метод для вывода общих по лайкам фильмов с другим пользователем
+    // Метод для вывода общих по лайкам фильмов с другим пользователем/
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam Integer userId,
                                      @RequestParam Integer friendId) {
