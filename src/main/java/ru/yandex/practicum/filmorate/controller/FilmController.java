@@ -63,11 +63,11 @@ public class FilmController {
     }
 
     /*возвращает список топ фильмов*/
-    @GetMapping("/popular")
+    /*@GetMapping("/popular")
     public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
         log.info("Поступил запрос на вывод списка топовых фильмов");
         return filmService.getTopFilms(count);
-    }
+    }*/
 
     /* Метод удаления фильма по id */
     @DeleteMapping("/{filmId}")

@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
@@ -238,9 +239,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
 
-
     public List<Film> getPopularFilmsByGenre(int genreId, int count) {
-        String sqlQuery = "SELECT f.*, COUNT(l.user_id) AS like_count " +
+        String sqlQuery = "SELECT f.*, m.name as mpa_name, COUNT(l.user_id) AS like_count " +
                 "FROM films AS f " +
                 "JOIN films_genre AS fg ON f.id = fg.film_id " +
                 "JOIN mpa AS m ON f.mpa_id = m.id " +
@@ -253,7 +253,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> getPopularFilmsByYear(int year, int count) {
-        String sqlQuery = "SELECT f.*, COUNT(l.user_id) AS like_count " +
+        String sqlQuery = "SELECT f.*, m.name as mpa_name, COUNT(l.user_id) AS like_count " +
                 "FROM films AS f " +
                 "JOIN mpa AS m ON f.mpa_id = m.id " +
                 "LEFT JOIN likes AS l ON f.id = l.film_id " +
@@ -271,7 +271,7 @@ public class FilmDbStorage implements FilmStorage {
                 + "JOIN mpa AS m ON f.mpa_id = m.id "
                 + "LEFT JOIN likes AS l ON f.id = l.film_id "
                 + "WHERE fg.genre_id = ? AND YEAR(f.releaseDate) = ? "
-                + "GROUP BY f.id, m.name " // Включаем столбец m.name в GROUP BY
+                + "GROUP BY f.id " // Включаем столбец m.name в GROUP BY -- , m.name
                 + "ORDER BY COUNT(l.user_id) DESC LIMIT ?";
         return jdbcTemplate.query(sqlQuery, new RowMapper<Film>() {
             @Override
@@ -283,6 +283,7 @@ public class FilmDbStorage implements FilmStorage {
                         .releaseDate(LocalDate.parse(rs.getString("releaseDate")))
                         .duration(rs.getInt("duration"))
                         .mpa(Mpa.builder().id(rs.getInt("mpa_id")).name(rs.getString("mpa_name")).build())
+                        .directors(selectDirectors(rs.getInt("id"))) // добавляю режисера
                         .build();
                 film.setGenres(new ArrayList<>(genreDbStorage.getGenresOfFilm(film.getId())));
                 return film;
