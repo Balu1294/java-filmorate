@@ -17,44 +17,36 @@ import java.util.List;
 @Slf4j
 public class FilmController {
     private static final String PATH_LIKE = "/{id}/like/{userId}";
-
     private final FilmService filmService;
-
     @Autowired
     public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
-
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на добавление нового фильма");
         return filmService.addFilm(film);
     }
-
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
         log.info("Поступил запрос на обновление данных о фильме с id = {}", film.getId());
         return filmService.updateFilm(film);
     }
-
     @GetMapping
     public List<Film> getAllFilms() {
         log.info("Поступил запрос на вывод списка всех фильмов");
         return filmService.getAllFilms();
     }
-
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable Integer id) {
         return filmService.getFilmById(id);
     }
-
     /*пользователь ставит лайк фильму */
     @PutMapping(PATH_LIKE)
     public void userLikedFilm(@PathVariable Integer id, @PathVariable Integer userId) {
         log.info("Поступил запрос на добавление лайка к фильму");
         filmService.addLike(id, userId);
     }
-
     /*пользователь удаляет лайк */
     @DeleteMapping(PATH_LIKE)
     public void userRemovedLike(@PathVariable Integer id, @PathVariable Integer userId) throws ValidationException {
@@ -63,10 +55,11 @@ public class FilmController {
     }
 
     /*возвращает список топ фильмов*/
+    @GetMapping("/popular")
     /*@GetMapping("/popular")
-    public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
-        log.info("Поступил запрос на вывод списка топовых фильмов");
-        return filmService.getTopFilms(count);
+ public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
+ log.info("Поступил запрос на вывод списка топовых фильмов");
+ return filmService.getTopFilms(count);
     }*/
 
     /* Метод удаления фильма по id */
@@ -75,7 +68,6 @@ public class FilmController {
         log.info("Поступил запрос на удаление фильма");
         filmService.removeFilm(id);
     }
-
     /**
      * Поиск по названию фильмов и по режиссёру.
      * Возвращает список фильмов, отсортированных по популярности
@@ -89,7 +81,6 @@ public class FilmController {
                                        @RequestParam String by) {
         return filmService.getFilmsBySearch(query, by);
     }
-
     @GetMapping("/director/{directorId}")
     public List<Film> getDirectorSorted(
             @PathVariable int directorId,
@@ -97,7 +88,6 @@ public class FilmController {
     ) {
         return filmService.getDirectorSorted(directorId, sortBy);
     }
-
     @GetMapping("/popular")
     public List<Film> getPopularFilms(
             @RequestParam(defaultValue = "10") int count,
