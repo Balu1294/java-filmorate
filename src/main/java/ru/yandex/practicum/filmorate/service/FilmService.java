@@ -110,11 +110,14 @@ public class FilmService {
         return filmStorage.getPopularFilmsByGenre(genreId,count);// Реализация получения популярных фильмов по указанному жанру
     }
 
-
-    public List<Film> getPopularFilmsByYear(int year, int count) {
+    // Метод для вывода общих по лайкам фильмов с другим пользователем
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        log.info("Выводится список фильмов для пользователя с id = {} и пользователя с id = {}", userId, friendId);
+        return filmStorage.getCommonFilms(userId,friendId);
+    }
+  public List<Film> getPopularFilmsByYear(int year, int count) {
         return filmStorage.getPopularFilmsByYear(year,count);// Реализация получения популярных фильмов за указанный год
     }
-
 
     public List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count) {
         return filmStorage.getPopularFilmsByGenreAndYear(genreId,year,count);// Реализация получения популярных фильмов по указанному жанру и году

@@ -20,6 +20,8 @@ public interface FilmStorage {
     List<Film> getPopularFilms(Integer count);
     // Метод удаления фильма по id
     void removeFilm(Integer id);
+    //Метод вывода общих фильмов с другим пользователем
+    List<Film> getCommonFilms(Integer userId, Integer friendId);
     List<Film> getFilmsBySearch(String query, String by);
     List<Director> selectDirectors(int filmId);
     List<Film> getDirectorSorted(int directorId, String sortBy);
