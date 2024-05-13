@@ -293,7 +293,7 @@ public class FilmDbStorage implements FilmStorage {
 
         //Метод вывода общих фильмов с другим пользователем
         @Override
-        public List<Film> getCommonFilms (Integer userId, Integer friendId) {
+        public List<Film> getCommonFilms(Integer userId, Integer friendId) {
             SqlRowSet userFilms = jdbcTemplate.queryForRowSet("SELECT u.film_id " +
                     "FROM likes as u " +
                     "INNER JOIN (SELECT film_id FROM likes WHERE user_id = ? ) as f " +
