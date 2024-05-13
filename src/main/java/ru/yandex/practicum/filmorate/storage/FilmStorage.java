@@ -44,4 +44,5 @@ public interface FilmStorage {
     //Метод вывода общих фильмов с другим пользователем
     List<Film> getCommonFilms(Integer userId, Integer friendId);
 
+
 }
