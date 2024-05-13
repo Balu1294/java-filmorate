@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Director;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,14 @@ public interface FilmStorage {
 
     List<Film> getDirectorSorted(int directorId, String sortBy);
 
+    List<Film> getPopularFilmsByGenre(int genreId, int count);
+
+    List<Film> getPopularFilmsByYear(int year, int count);
+
+    List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count);
+
     //Метод вывода общих фильмов с другим пользователем
     List<Film> getCommonFilms(Integer userId, Integer friendId);
+
 
 }
