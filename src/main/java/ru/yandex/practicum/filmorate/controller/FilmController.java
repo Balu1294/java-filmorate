@@ -118,7 +118,6 @@ public class FilmController {
             return filmService.getPopularFilms(count);
         }
     }
-  
 
      // Метод для вывода общих по лайкам фильмов с другим пользователем/
     @GetMapping("/common")
