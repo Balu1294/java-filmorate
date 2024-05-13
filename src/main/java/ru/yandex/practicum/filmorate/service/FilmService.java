@@ -113,6 +113,7 @@ public class FilmService {
         log.info("Получение фильмов режиссера {} с сортировкой по {}", directorId, sortBy);
         return filmStorage.getDirectorSorted(directorId, sortBy);
     }
+
     // Метод для вывода общих по лайкам фильмов с другим пользователем
     public List<Film> getCommonFilms(Integer userId, Integer friendId) {
         log.info("Выводится список фильмов для пользователя с id = {} и пользователя с id = {}", userId, friendId);
