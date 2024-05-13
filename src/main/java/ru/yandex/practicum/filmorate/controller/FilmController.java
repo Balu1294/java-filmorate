@@ -36,7 +36,6 @@ public class FilmController {
         log.info("Поступил запрос на обновление данных о фильме с id = {}", film.getId());
         return filmService.updateFilm(film);
     }
-
     @GetMapping
     public List<Film> getAllFilms() {
         log.info("Поступил запрос на вывод списка всех фильмов");
@@ -64,9 +63,9 @@ public class FilmController {
 
     /*возвращает список топ фильмов*/
     /*@GetMapping("/popular")
-    public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
-        log.info("Поступил запрос на вывод списка топовых фильмов");
-        return filmService.getTopFilms(count);
+ public List<Film> getTopFilms(@RequestParam(defaultValue = "10", required = false) int count) {
+ log.info("Поступил запрос на вывод списка топовых фильмов");
+ return filmService.getTopFilms(count);
     }*/
 
     /* Метод удаления фильма по id */
@@ -74,6 +73,26 @@ public class FilmController {
     public void removeFilm(@PathVariable("filmId") Integer id) {
         log.info("Поступил запрос на удаление фильма");
         filmService.removeFilm(id);
+    }
+    /**
+     * Поиск по названию фильмов и по режиссёру.
+     * Возвращает список фильмов, отсортированных по популярности
+     * @param query — текст для поиска
+     * @param by — может принимать значения director (поиск по режиссёру),
+     *           title (поиск по названию), либо оба значения через запятую
+     *           при поиске одновременно и по режиссеру и по названию.
+     */
+    @GetMapping("/search")
+    public List<Film> getFilmsBySearch(@RequestParam String query,
+                                       @RequestParam String by) {
+        return filmService.getFilmsBySearch(query, by);
+    }
+    @GetMapping("/director/{directorId}")
+    public List<Film> getDirectorSorted(
+            @PathVariable int directorId,
+            @RequestParam(value = "sortBy", required = true) String sortBy
+    ) {
+        return filmService.getDirectorSorted(directorId, sortBy);
     }
 
     @GetMapping("/popular")
