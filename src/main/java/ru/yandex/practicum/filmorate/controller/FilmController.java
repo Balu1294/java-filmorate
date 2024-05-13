@@ -88,7 +88,7 @@ public class FilmController {
      */
     @GetMapping("/search")
     public List<Film> getFilmsBySearch(@RequestParam String query,
-                                       @RequestParam String by) {
+                                      @RequestParam String by) {
         return filmService.getFilmsBySearch(query, by);
     }
 
@@ -119,7 +119,7 @@ public class FilmController {
         }
     }
 
-    // Метод для вывода общих по лайкам фильмов с другим пользователем/
+     // Метод для вывода общих по лайкам фильмов с другим пользователем/
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam Integer userId,
                                      @RequestParam Integer friendId) {

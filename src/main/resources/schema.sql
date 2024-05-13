@@ -87,3 +87,4 @@ create table if not exists reviews_likes (
     is_like boolean,
   	PRIMARY KEY (review_id, user_id)
 );
+

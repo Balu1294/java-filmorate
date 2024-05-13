@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.storage.dao.DirectorDBStorage.directorRowMapper;
 
-
 @Primary
 @Component
 @AllArgsConstructor
@@ -238,7 +237,7 @@ public class FilmDbStorage implements FilmStorage {
         return films;
     }
 
-    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+   public List<Film> getPopularFilmsByGenre(int genreId, int count) {
         String sqlQuery = "SELECT f.*, m.name as mpa_name, COUNT(l.user_id) AS like_count " +
                 "FROM films AS f " +
                 "JOIN films_genre AS fg ON f.id = fg.film_id " +
@@ -291,20 +290,20 @@ public class FilmDbStorage implements FilmStorage {
         }, genreId, year, count);
     }
 
-    //Метод вывода общих фильмов с другим пользователем
-    @Override
-    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
-        SqlRowSet userFilms = jdbcTemplate.queryForRowSet("SELECT u.film_id " +
-                "FROM likes as u " +
-                "INNER JOIN (SELECT film_id FROM likes WHERE user_id = ? ) as f " +
-                "ON u.film_id = f.film_id " +
-                "WHERE user_id = ? ;", friendId, userId);
-        if (!userFilms.next()) {
-            return new ArrayList<>();
+        //Метод вывода общих фильмов с другим пользователем
+        @Override
+        public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+            SqlRowSet userFilms = jdbcTemplate.queryForRowSet("SELECT u.film_id " +
+                    "FROM likes as u " +
+                    "INNER JOIN (SELECT film_id FROM likes WHERE user_id = ? ) as f " +
+                    "ON u.film_id = f.film_id " +
+                    "WHERE user_id = ? ;", friendId, userId);
+            if (!userFilms.next()) {
+                return new ArrayList<>();
+            }
+            String sqlQuery = "select f.*, m.name as mpa_name from films as f  join mpa as m on  f.mpa_id=m.id " +
+                    "LEFT JOIN  likes AS l ON f.id=l.film_id " +
+                    "where f.id = ? order by count(l.user_id) desc";
+            return jdbcTemplate.query(sqlQuery, rowMap(), userFilms.getInt("film_id"));
         }
-        String sqlQuery = "select f.*, m.name as mpa_name from films as f  join mpa as m on  f.mpa_id=m.id " +
-                "LEFT JOIN  likes AS l ON f.id=l.film_id " +
-                "where f.id = ? order by count(l.user_id) desc";
-        return jdbcTemplate.query(sqlQuery, rowMap(), userFilms.getInt("film_id"));
-    }
 }
