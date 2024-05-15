@@ -49,26 +49,30 @@ public class ReviewController {
         return reviewService.getReviewsForFilm(filmId, count);
     }
 
-    @PutMapping("/{id}/like/{userId}")
-    public void addLikeForReview(@PathVariable("id") Integer reviewId, @PathVariable Integer userId) {
+    @PutMapping("/{review-id}/like/{user-id}")
+    public void addLikeForReview(@PathVariable("review-id") Integer reviewId,
+                                 @PathVariable("user-id") Integer userId) {
         log.info("Поступил запрос на добавление лайка отзыву");
         reviewService.addLike(reviewId, userId);
     }
 
-    @PutMapping("/{id}/dislike/{userId}")
-    public void addDislikeForReview(@PathVariable("id") Integer reviewId, @PathVariable Integer userId) {
+    @PutMapping("/{review-id}/dislike/{user-id}")
+    public void addDislikeForReview(@PathVariable("review-id") Integer reviewId,
+                                    @PathVariable("user-id") Integer userId) {
         log.info("Поступил запрос на добавление дизлайка отзыву");
         reviewService.addDislike(reviewId, userId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
-    public void removeLikeForReview(@PathVariable("id") Integer reviewId, @PathVariable Integer userId) {
+    @DeleteMapping("/{review-id}/like/{user-id}")
+    public void removeLikeForReview(@PathVariable("review-id") Integer reviewId,
+                                    @PathVariable("user-id") Integer userId) {
         log.info("Поступил запрос на удаление лайка отзыву");
         reviewService.removeReaction(reviewId, userId);
     }
 
-    @DeleteMapping("/{id}/dislike/{userId}")
-    public void removeDislikeForReview(@PathVariable("id") Integer reviewId, @PathVariable Integer userId) {
+    @DeleteMapping("/{review-id}/dislike/{user-id}")
+    public void removeDislikeForReview(@PathVariable("review-id") Integer reviewId,
+                                       @PathVariable("user-id") Integer userId) {
         log.info("Поступил запрос на удаление дизлайка отзыву");
         reviewService.removeReaction(reviewId, userId);
     }
