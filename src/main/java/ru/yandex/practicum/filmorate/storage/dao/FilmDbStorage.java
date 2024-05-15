@@ -149,7 +149,6 @@ public class FilmDbStorage implements FilmStorage {
         };
     }
 
-
     @Override
     public List<Film> getFilmsBySearch(String query, String by) {
         String sql = "SELECT f.*" +
@@ -180,8 +179,6 @@ public class FilmDbStorage implements FilmStorage {
         return result.stream()
                 .sorted(Comparator.comparing(Film::getLikes).reversed())
                 .collect(Collectors.toList());
-
-
     }
 
     private void insertDirector(Film film) {
