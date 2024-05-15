@@ -3,8 +3,11 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.enums.EventType;
+import ru.yandex.practicum.filmorate.enums.Operation;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -20,6 +23,7 @@ public class ReviewService {
     private final ReviewStorage reviewStorage;
     private final UserStorage userStorage;
     private final FilmStorage filmStorage;
+    private final FeedStorage feedStorage;
 
     public Review addReview(Review review) {
         ReviewValidator.validationReviews(review);
@@ -32,6 +36,8 @@ public class ReviewService {
         ReviewValidator.validationReviews(review);
         validUserandFilm(review.getUserId(), review.getFilmId());
         log.info("Пользователь с id = {} обновляет отзыв к фильму с id = {}", review.getUserId(), review.getFilmId());
+        feedStorage.addEvent(getReviewById(review.getReviewId()).getUserId(), EventType.REVIEW.name(),
+                Operation.UPDATE.name(), review.getReviewId());
         return reviewStorage.updateReview(review);
     }
 
@@ -45,6 +51,7 @@ public class ReviewService {
         reviewStorage.removeReviewById(id);
         log.info("Отзыв c id= {} пользователя c id= {} для фильма с id= {} удален",
                 review.getReviewId(), review.getUserId(), review.getFilmId());
+        feedStorage.addEvent(review.getUserId(), EventType.REVIEW.name(), Operation.REMOVE.name(), review.getFilmId());
     }
 
     public List<Review> getReviewsForFilm(Integer filmId, Integer count) {

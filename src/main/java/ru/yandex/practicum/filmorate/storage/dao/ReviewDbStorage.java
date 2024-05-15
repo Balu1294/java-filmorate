@@ -8,7 +8,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.enums.EventType;
+import ru.yandex.practicum.filmorate.enums.Operation;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.ReviewStorage;
 
 import java.sql.PreparedStatement;
@@ -23,6 +26,7 @@ import java.util.Optional;
 @Component
 public class ReviewDbStorage implements ReviewStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final FeedStorage feedStorage;
 
     @Override
     public Review addReview(Review review) {
@@ -38,6 +42,7 @@ public class ReviewDbStorage implements ReviewStorage {
             return stmt;
         }, keyHolder);
         review.setReviewId(Objects.requireNonNull(keyHolder.getKey().intValue()));
+        feedStorage.addEvent(review.getUserId(), EventType.REVIEW.name(), Operation.ADD.name(), review.getReviewId());
         return review;
     }
 
