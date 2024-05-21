@@ -5,19 +5,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.enums.EventType;
+import ru.yandex.practicum.filmorate.enums.Operation;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.validators.FilmValidator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,6 +29,7 @@ public class FilmService {
     UserService userService;
     GenreStorage genreStorage;
     LikesStorage likesStorage;
+    FeedStorage feedStorage;
 
     public Film addFilm(Film film) throws ValidationException {
         FilmValidator.filmValidate(film);
@@ -35,7 +37,7 @@ public class FilmService {
         if (!film.getGenres().isEmpty() || film.getGenres() != null) {
             Set<Genre> genres = new HashSet<>(film.getGenres());
             genreStorage.addGenreToFilm(film, genres);
-            film.setGenres(genres);
+            film.setGenres(sortGenres(genres));
         }
         return film;
     }
@@ -49,7 +51,7 @@ public class FilmService {
             Set<Genre> genres = new HashSet<>(film.getGenres());
             genreStorage.removeGenresForFilm(film.getId());
             genreStorage.addGenreToFilm(film, genres);
-            film.setGenres(genres);
+            film.setGenres(sortGenres(genres));
         } else {
             genreStorage.removeGenresForFilm(film.getId());
         }
@@ -63,6 +65,7 @@ public class FilmService {
 
     public void addLike(Integer filmId, Integer userId) {
         likesStorage.addLike(userId, filmId);
+        feedStorage.addEvent(userId, EventType.LIKE.name(), Operation.ADD.name(), filmId);
     }
 
     public void removeLike(int filmId, int userId) {
@@ -70,6 +73,7 @@ public class FilmService {
         userService.getUserById(userId);
         likesStorage.removeLike(userId, filmId);
         log.info("Удален лайк пользователем с id={} у фильма с id={}", userId, filmId);
+        feedStorage.addEvent(userId, EventType.LIKE.name(), Operation.REMOVE.name(), filmId);
     }
 
     public Film getFilmById(Integer id) {
@@ -83,5 +87,61 @@ public class FilmService {
         log.info("Выводится список из {} фильмов", count);
         List<Film> topFilms = new ArrayList<>(filmStorage.getPopularFilms(count));
         return topFilms;
+    }
+
+    private List<Genre> sortGenres(Set<Genre> genres) {
+        return new ArrayList<>(genres).stream()
+                .sorted((Comparator.comparingLong(Genre::getId)))
+                .collect(Collectors.toList());
+    }
+
+    /* Метод удаления фильма по id */
+    public void removeFilm(Integer id) {
+        filmStorage.getFilmById(id).orElseThrow(() ->
+                new NotFoundException(String.format("Фильм с id = %d не найден", id)));
+        filmStorage.removeFilm(id);
+        log.info("Удален фильм с id = %d", id);
+    }
+
+    public List<Film> getFilmsBySearch(String query, String by) {
+        log.info("Начинаем поиск");
+        if (query.isBlank()) {
+            log.info("Пустой запрос поиска");
+            return new ArrayList<>();
+        }
+        log.info("Начинаем поиск по запросу: {}", query);
+        String subString = "%" + query.toLowerCase() + "%";
+        return filmStorage.getFilmsBySearch(subString, by);
+    }
+
+    public List<Film> getDirectorSorted(int directorId, String sortBy) {
+        log.info("Получение фильмов режиссера {} с сортировкой по {}", directorId, sortBy);
+        return filmStorage.getDirectorSorted(directorId, sortBy);
+    }
+
+    public List<Film> getPopularFilms(int count) {
+        return filmStorage.getPopularFilms(count);// Реализация получения популярных фильмов без учета жанра и года
+    }
+
+    // Реализация получения популярных фильмов по указанному жанру
+    public List<Film> getPopularFilmsByGenre(int genreId, int count) {
+        return filmStorage.getPopularFilmsByGenre(genreId, count);
+    }
+
+    // Реализация получения популярных фильмов за указанный год
+    public List<Film> getPopularFilmsByYear(int year, int count) {
+        return filmStorage.getPopularFilmsByYear(year, count);
+    }
+
+    // Реализация получения популярных фильмов по указанному жанру и году
+    public List<Film> getPopularFilmsByGenreAndYear(int genreId, int year, int count) {
+        return filmStorage.getPopularFilmsByGenreAndYear(genreId, year, count);
+    }
+
+    // Метод для вывода общих по лайкам фильмов с другим пользователем
+    public List<Film> getCommonFilms(Integer userId, Integer friendId) {
+        log.info("Выводится список фильмов для пользователя с id = {} и пользователя с id = {}", userId, friendId);
+        return filmStorage.getCommonFilms(userId, friendId);
+
     }
 }

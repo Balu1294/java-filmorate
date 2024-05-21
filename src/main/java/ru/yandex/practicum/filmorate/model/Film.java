@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -32,9 +32,10 @@ public class Film {
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @Builder.Default
-    int likes = 0;
+    Integer likes = 0;
     @NotNull
     Mpa mpa;
     @Builder.Default
-    Set<Genre> genres = new HashSet<>();
+    List<Genre> genres = new ArrayList<>();
+    private List<Director> directors = new ArrayList<>();
 }

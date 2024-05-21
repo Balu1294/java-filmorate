@@ -79,7 +79,7 @@ public class UserDbTest {
         userStorage.createUser(newUser);
         List<User> users = userStorage.getAllUsers();
         Assertions.assertThat(users).isNotEmpty().isNotNull().doesNotHaveDuplicates();
-        Assertions.assertThat(users).extracting("name").contains(newUser.getLogin());
+        Assertions.assertThat(users).extracting("login").contains(newUser.getLogin());
         Assertions.assertThat(users).extracting("email").contains(userTest.getEmail());
 
     }
